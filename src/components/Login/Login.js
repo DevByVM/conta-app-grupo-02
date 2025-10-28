@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from 'firebase/auth';
+import { auth } from '../../services/firebase';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
@@ -10,34 +15,51 @@ const Login = ({ onLogin }) => {
   const [modo, setModo] = useState('login');
   const [mensaje, setMensaje] = useState('');
 
-  const [usuarios] = useState([
-    { email: 'admin@contaapp.com', password: '123456', rol: 'Administrador' },
-    { email: 'contador@contaapp.com', password: '123456', rol: 'Contador' },
-    { email: 'usuario@contaapp.com', password: '123456', rol: 'Usuario' }
-  ]);
-
   const handleLogin = async (e) => {
     e.preventDefault();
     
     if (!credenciales.email || !credenciales.password) {
-      setMensaje('Por favor ingresa email y contraseña');
+      setMensaje('Por favor ingrese email y contraseña');
       return;
     }
 
-    const usuarioValido = usuarios.find(
-      user => user.email === credenciales.email && user.password === credenciales.password
-    );
+    setCargando(true);
+    setMensaje('Iniciando sesión...');
 
-    if (usuarioValido) {
-      setCargando(true);
-      setMensaje('Iniciando sesión...');
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth, 
+        credenciales.email, 
+        credenciales.password
+      );
+      
+      const user = userCredential.user;
+      
+      setMensaje('¡Sesión iniciada correctamente!');
+      
+      const rol = await determinarRolUsuario(user.uid);
       
       setTimeout(() => {
-        onLogin(true, { email: credenciales.email, rol: usuarioValido.rol });
+        onLogin(true, { 
+          email: user.email, 
+          rol: rol,
+          uid: user.uid 
+        });
         setCargando(false);
       }, 1000);
-    } else {
-      setMensaje('Credenciales incorrectas. ¿Necesitas crear una cuenta?');
+      
+    } catch (error) {
+      setCargando(false);
+      
+      if (error.code === 'auth/user-not-found') {
+        setMensaje('Usuario no encontrado. ¿Necesita crear una cuenta?');
+      } else if (error.code === 'auth/wrong-password') {
+        setMensaje('Contraseña incorrecta. Intente nuevamente.');
+      } else if (error.code === 'auth/invalid-email') {
+        setMensaje('El formato del email es inválido.');
+      } else {
+        setMensaje('Error al iniciar sesión. Intente nuevamente.');
+      }
     }
   };
 
@@ -45,7 +67,7 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     
     if (!credenciales.email || !credenciales.password) {
-      setMensaje('Por favor ingresa email y contraseña');
+      setMensaje('Por favor ingrese email y contraseña');
       return;
     }
 
@@ -54,38 +76,73 @@ const Login = ({ onLogin }) => {
       return;
     }
 
-    const usuarioExistente = usuarios.find(user => user.email === credenciales.email);
-    
-    if (usuarioExistente) {
-      setMensaje('Este email ya está registrado. Inicia sesión en su lugar.');
-      return;
-    }
-
     setCargando(true);
-    setMensaje('Creando tu cuenta...');
+    setMensaje('Creando su cuenta...');
 
-    setTimeout(() => {
-      const nuevoUsuario = {
-        email: credenciales.email,
-        password: credenciales.password,
-        rol: 'Usuario'
-      };
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        credenciales.email,
+        credenciales.password
+      );
+      
+      const user = userCredential.user;
       
       setMensaje('¡Cuenta creada exitosamente! Iniciando sesión...');
       
       setTimeout(() => {
-        onLogin(true, { email: credenciales.email, rol: 'Usuario' });
+        onLogin(true, { 
+          email: user.email, 
+          rol: 'Usuario',
+          uid: user.uid 
+        });
         setCargando(false);
       }, 1000);
-    }, 1500);
+      
+    } catch (error) {
+      setCargando(false);
+      
+      if (error.code === 'auth/email-already-in-use') {
+        setMensaje('Este email ya está registrado. Inicie sesión en su lugar.');
+      } else if (error.code === 'auth/weak-password') {
+        setMensaje('La contraseña es demasiado débil.');
+      } else if (error.code === 'auth/invalid-email') {
+        setMensaje('El formato del email es inválido.');
+      } else {
+        setMensaje('Error al crear la cuenta. Intente nuevamente.');
+      }
+    }
   };
 
-  const usarCredencialDemo = (demo) => {
+  const determinarRolUsuario = async (uid) => {
+    const usuariosDemo = {
+      'admin@contaapp.com': 'Administrador',
+      'contador@contaapp.com': 'Contador', 
+      'usuario@contaapp.com': 'Usuario'
+    };
+    
+    return usuariosDemo[credenciales.email] || 'Usuario';
+  };
+
+  const usarCredencialDemo = async (demo) => {
     setCredenciales({
       email: demo.email,
       password: demo.password
     });
     setMensaje(`Usando credenciales de ${demo.rol}`);
+    
+    setTimeout(() => {
+      setCargando(true);
+      setMensaje('Iniciando sesión con cuenta demo...');
+      
+      setTimeout(() => {
+        onLogin(true, { 
+          email: demo.email, 
+          rol: demo.rol 
+        });
+        setCargando(false);
+      }, 1000);
+    }, 500);
   };
 
   const cambiarModo = () => {
@@ -95,19 +152,24 @@ const Login = ({ onLogin }) => {
   };
 
   const obtenerTipoMensaje = () => {
-    if (mensaje.includes('Iniciando sesión') || mensaje.includes('Creando tu cuenta') || mensaje.includes('¡Cuenta creada')) {
+    if (mensaje.includes('Iniciando sesión') || mensaje.includes('Creando su cuenta') || mensaje.includes('¡Cuenta creada') || mensaje.includes('correctamente')) {
       return 'exito';
-    } else if (mensaje.includes('incorrectas') || mensaje.includes('ya está registrado') || mensaje.includes('al menos 6 caracteres')) {
+    } else if (mensaje.includes('incorrecta') || mensaje.includes('ya está registrado') || mensaje.includes('al menos 6 caracteres') || mensaje.includes('Error')) {
       return 'error';
-    } else if (mensaje.includes('Por favor ingresa')) {
+    } else if (mensaje.includes('Por favor ingrese')) {
       return 'advertencia';
     }
     return 'info';
   };
 
+  const usuariosDemo = [
+    { email: 'admin@contaapp.com', password: '123456', rol: 'Administrador' },
+    { email: 'contador@contaapp.com', password: '123456', rol: 'Contador' },
+    { email: 'usuario@contaapp.com', password: '123456', rol: 'Usuario' }
+  ];
+
   return (
     <div id="login-page">
-      {/* Fondo estático */}
       <div className="login-fondo">
         <div className="forma-decorativa forma-1"></div>
         <div className="forma-decorativa forma-2"></div>
@@ -115,7 +177,6 @@ const Login = ({ onLogin }) => {
 
       <div className="login-contenedor">
         <div className="login-tarjeta">
-          {/* Header */}
           <div className="login-cabecera">
             <div className="logo-principal">
               <div className="logo-icono">
@@ -143,7 +204,6 @@ const Login = ({ onLogin }) => {
             </div>
           </div>
 
-          {/* Formulario */}
           <form onSubmit={modo === 'login' ? handleLogin : handleRegistro} className="login-formulario">
             <div className="grupo-formulario">
               <label className="etiqueta-superior">Correo Electrónico</label>
@@ -168,14 +228,12 @@ const Login = ({ onLogin }) => {
             </div>
 
             <div className="grupo-formulario">
-              <label className="etiqueta-superior">
-                {modo === 'login' ? 'Contraseña' : 'Contraseña'}
-              </label>
+              <label className="etiqueta-superior">Contraseña</label>
               <div className="contenedor-input">
                 <input
                   type="password"
                   className="input-formulario"
-                  placeholder={modo === 'login' ? "Ingresa tu contraseña" : "Crea una contraseña segura"}
+                  placeholder={modo === 'login' ? "Ingrese su contraseña" : "Cree una contraseña segura"}
                   value={credenciales.password}
                   onChange={(e) => setCredenciales({...credenciales, password: e.target.value})}
                   required
@@ -191,12 +249,11 @@ const Login = ({ onLogin }) => {
               </div>
               {modo === 'registro' && (
                 <div className="texto-ayuda">
-                  🔒 Mínimo 6 caracteres para mayor seguridad
+                  Mínimo 6 caracteres para mayor seguridad
                 </div>
               )}
             </div>
 
-            {/* Mensaje de estado */}
             {mensaje && (
               <div className={`notificacion ${obtenerTipoMensaje()}`}>
                 <div className="notificacion-contenido">
@@ -206,7 +263,6 @@ const Login = ({ onLogin }) => {
               </div>
             )}
 
-            {/* Botón de envío */}
             <button 
               type="submit" 
               className={`btn-principal ${cargando ? 'cargando' : ''}`}
@@ -242,10 +298,9 @@ const Login = ({ onLogin }) => {
             </button>
           </form>
 
-          {/* Cambio entre modos */}
           <div className="cambio-modo">
             <p className="texto-cambio">
-              {modo === 'login' ? '¿Primera vez aquí?' : '¿Ya tienes una cuenta?'}
+              {modo === 'login' ? '¿Primera vez aquí?' : '¿Ya tiene una cuenta?'}
             </p>
             <button 
               className="btn-secundario"
@@ -256,21 +311,19 @@ const Login = ({ onLogin }) => {
             </button>
           </div>
 
-          {/* Separador */}
-          {modo === 'login' && <div className="separador"><span>o prueba con</span></div>}
+          {modo === 'login' && <div className="separador"><span>o pruebe con</span></div>}
 
-          {/* Cuentas de demostración */}
           {modo === 'login' && (
             <div className="demo-contenedor">
               <h3 className="demo-titulo">Acceso Rápido</h3>
               <p className="demo-descripcion">
-                Prueba el sistema con estas cuentas preconfiguradas
+                Pruebe el sistema con estas cuentas preconfiguradas
               </p>
               <div className="demo-grid">
                 <button
                   type="button"
                   className="tarjeta-demo"
-                  onClick={() => usarCredencialDemo(usuarios[0])}
+                  onClick={() => usarCredencialDemo(usuariosDemo[0])}
                   disabled={cargando}
                 >
                   <div className="demo-icono">👑</div>
@@ -284,7 +337,7 @@ const Login = ({ onLogin }) => {
                 <button
                   type="button"
                   className="tarjeta-demo"
-                  onClick={() => usarCredencialDemo(usuarios[1])}
+                  onClick={() => usarCredencialDemo(usuariosDemo[1])}
                   disabled={cargando}
                 >
                   <div className="demo-icono">📊</div>
@@ -298,7 +351,7 @@ const Login = ({ onLogin }) => {
                 <button
                   type="button"
                   className="tarjeta-demo"
-                  onClick={() => usarCredencialDemo(usuarios[2])}
+                  onClick={() => usarCredencialDemo(usuariosDemo[2])}
                   disabled={cargando}
                 >
                   <div className="demo-icono">👤</div>
@@ -313,7 +366,6 @@ const Login = ({ onLogin }) => {
           )}
         </div>
 
-        {/* Footer */}
         <footer className="login-footer">
           <div className="footer-contenido">
             <span className="footer-texto">
