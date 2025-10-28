@@ -1,0 +1,608 @@
+/* LibroDiario.css */
+.libro-diario {
+  /* Variables específicas para libro diario */
+  --diario-color-primario: #f59e0b;
+  --diario-color-primario-hover: #d97706;
+  --diario-color-venta: #10b981;
+  --diario-color-compra: #0ea5e9;
+  --diario-color-iva: #8b5cf6;
+  --diario-color-fondo-tarjeta: #ffffff;
+  
+  /* Variables globales con scope */
+  --diario-color-fondo: #ffffff;
+  --diario-color-secundario: #f8fafc;
+  --diario-color-texto: #1e293b;
+  --diario-color-texto-secundario: #64748b;
+  --diario-color-borde: #e2e8f0;
+  --diario-radio-borde: 12px;
+  --diario-sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --diario-sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --diario-sombra-intensa: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --diario-transicion-rapida: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --diario-transicion-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.libro-diario {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.libro-diario .contenedor-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--diario-color-fondo);
+  border-radius: var(--diario-radio-borde);
+  box-shadow: var(--diario-sombra-intensa);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.libro-diario .cabecera-seccion {
+  background: linear-gradient(135deg, var(--diario-color-primario), var(--diario-color-primario-hover));
+  color: white;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.libro-diario .cabecera-seccion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+}
+
+.libro-diario .titulo-grupo {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-diario .titulo-principal {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.libro-diario .subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.libro-diario .resumen-cabecera {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-diario .indicador-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.libro-diario .etiqueta-indicador {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.libro-diario .valor-indicador {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Panel de Controles */
+.libro-diario .panel-controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--diario-color-secundario);
+  border-bottom: 1px solid var(--diario-color-borde);
+}
+
+.libro-diario .estadisticas-principales {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.libro-diario .tarjeta-estadistica {
+  background: var(--diario-color-fondo);
+  border-radius: var(--diario-radio-borde);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--diario-sombra-suave);
+  border: 1px solid var(--diario-color-borde);
+  transition: var(--diario-transicion-media);
+}
+
+.libro-diario .tarjeta-estadistica:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--diario-sombra-media);
+}
+
+.libro-diario .icono-estadistica {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.libro-diario .estadistica-ventas {
+  background: var(--diario-color-venta);
+}
+
+.libro-diario .estadistica-compras {
+  background: var(--diario-color-compra);
+}
+
+.libro-diario .estadistica-total {
+  background: var(--diario-color-primario);
+}
+
+.libro-diario .contenido-estadistica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-diario .valor-estadistica {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--diario-color-texto);
+}
+
+.libro-diario .etiqueta-estadistica {
+  font-size: 0.9rem;
+  color: var(--diario-color-texto-secundario);
+  font-weight: 500;
+}
+
+/* Panel de Filtros */
+.libro-diario .panel-filtros {
+  background: var(--diario-color-fondo);
+  border-radius: var(--diario-radio-borde);
+  box-shadow: var(--diario-sombra-suave);
+  border: 1px solid var(--diario-color-borde);
+  overflow: hidden;
+}
+
+.libro-diario .cabecera-filtros {
+  background: var(--diario-color-secundario);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--diario-color-borde);
+}
+
+.libro-diario .titulo-filtros {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--diario-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.libro-diario .contenido-filtros {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.libro-diario .campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.libro-diario .etiqueta-filtro {
+  font-weight: 600;
+  color: var(--diario-color-texto);
+  font-size: 0.9rem;
+}
+
+.libro-diario .select-filtro,
+.libro-diario .input-filtro {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--diario-color-borde);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: var(--diario-transicion-rapida);
+  background: var(--diario-color-fondo);
+}
+
+.libro-diario .select-filtro:focus,
+.libro-diario .input-filtro:focus {
+  outline: none;
+  border-color: var(--diario-color-primario);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.libro-diario .grupo-fechas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.libro-diario .btn-secundario {
+  background: var(--diario-color-secundario);
+  border: 1px solid var(--diario-color-borde);
+  color: var(--diario-color-texto);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--diario-transicion-rapida);
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.libro-diario .btn-secundario:hover {
+  background: var(--diario-color-borde);
+}
+
+/* Panel de Transacciones */
+.libro-diario .panel-transacciones {
+  background: var(--diario-color-fondo);
+  border-radius: var(--diario-radio-borde);
+  box-shadow: var(--diario-sombra-suave);
+  border: 1px solid var(--diario-color-borde);
+  margin: 0 2rem 2rem 2rem;
+  overflow: hidden;
+}
+
+.libro-diario .cabecera-panel {
+  background: var(--diario-color-secundario);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--diario-color-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.libro-diario .titulo-panel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--diario-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.libro-diario .contador-transacciones {
+  display: flex;
+  align-items: center;
+}
+
+.libro-diario .badge-contador {
+  background: var(--diario-color-primario);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.libro-diario .contenedor-lista {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-diario .lista-transacciones {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-height: 600px;
+}
+
+.libro-diario .tarjeta-transaccion {
+  background: var(--diario-color-fondo);
+  border: 1px solid var(--diario-color-borde);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: var(--diario-transicion-rapida);
+  cursor: pointer;
+}
+
+.libro-diario .tarjeta-transaccion:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--diario-sombra-media);
+  border-color: var(--diario-color-primario);
+}
+
+.libro-diario .tarjeta-transaccion:last-child {
+  margin-bottom: 0;
+}
+
+.libro-diario .transaccion-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.libro-diario .transaccion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.libro-diario .transaccion-fecha {
+  font-size: 0.9rem;
+  color: var(--diario-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-diario .badge-tipo {
+  padding: 0.375rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.libro-diario .transaccion-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--diario-color-texto);
+}
+
+.libro-diario .transaccion-detalles {
+  margin-bottom: 1rem;
+}
+
+.libro-diario .detalle-principal {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.libro-diario .detalle-titulo {
+  font-weight: 600;
+  color: var(--diario-color-texto);
+  font-size: 0.9rem;
+}
+
+.libro-diario .detalle-valor {
+  color: var(--diario-color-texto);
+  font-weight: 500;
+}
+
+.libro-diario .detalle-secundario {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.libro-diario .factura-numero {
+  font-size: 0.8rem;
+  color: var(--diario-color-primario);
+  font-weight: 600;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.libro-diario .tipo-gasto {
+  font-size: 0.8rem;
+  color: var(--diario-color-compra);
+  font-weight: 500;
+  background: rgba(14, 165, 233, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.libro-diario .detalle-descripcion {
+  color: var(--diario-color-texto-secundario);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.libro-diario .transaccion-desglose {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--diario-color-borde);
+}
+
+.libro-diario .item-desglose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.libro-diario .item-desglose span:first-child {
+  color: var(--diario-color-texto-secundario);
+}
+
+.libro-diario .item-desglose span:last-child {
+  font-weight: 600;
+  color: var(--diario-color-texto);
+}
+
+.libro-diario .item-total span:last-child {
+  font-size: 1rem;
+}
+
+.libro-diario .texto-iva {
+  color: var(--diario-color-iva) !important;
+}
+
+.libro-diario .texto-total {
+  font-weight: 700 !important;
+}
+
+/* Estados */
+.libro-diario .estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--diario-color-texto-secundario);
+}
+
+.libro-diario .spinner-elegante {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--diario-color-borde);
+  border-left: 3px solid var(--diario-color-primario);
+  border-radius: 50%;
+  animation: diarioSpin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.libro-diario .texto-cargando {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.libro-diario .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--diario-color-texto-secundario);
+  flex: 1;
+}
+
+.libro-diario .icono-vacio {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.libro-diario .titulo-vacio {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--diario-color-texto);
+}
+
+.libro-diario .descripcion-vacio {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Animaciones específicas para libro diario */
+@keyframes diarioSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .libro-diario .panel-controls {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .libro-diario .estadisticas-principales {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .libro-diario {
+    padding: 1rem;
+  }
+  
+  .libro-diario .cabecera-seccion {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-diario .indicador-total {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .libro-diario .estadisticas-principales {
+    grid-template-columns: 1fr;
+  }
+  
+  .libro-diario .transaccion-cabecera {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-diario .transaccion-desglose {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .libro-diario .grupo-fechas {
+    grid-template-columns: 1fr;
+  }
+  
+  .libro-diario .detalle-secundario {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .libro-diario .panel-transacciones {
+    margin: 0 1rem 1rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .libro-diario .layout-contenido {
+    padding: 1rem;
+  }
+  
+  .libro-diario .contenido-filtros {
+    padding: 1.25rem;
+  }
+  
+  .libro-diario .cabecera-panel {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .libro-diario .lista-transacciones {
+    padding: 0.75rem;
+  }
+  
+  .libro-diario .tarjeta-transaccion {
+    padding: 1.25rem;
+  }
+}

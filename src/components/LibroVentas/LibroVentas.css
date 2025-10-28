@@ -1,0 +1,641 @@
+/* LibroVentas.css */
+.libro-ventas {
+  /* Variables específicas para ventas */
+  --ventas-color-primario: #10b981;
+  --ventas-color-primario-hover: #059669;
+  --ventas-color-iva: #8b5cf6;
+  --ventas-color-total: #059669;
+  --ventas-color-base: #3b82f6;
+  --ventas-color-exito: #10b981;
+  --ventas-color-error: #ef4444;
+  --ventas-color-advertencia: #f59e0b;
+  
+  /* Variables globales con scope */
+  --ventas-color-fondo: #ffffff;
+  --ventas-color-secundario: #f8fafc;
+  --ventas-color-texto: #1e293b;
+  --ventas-color-texto-secundario: #64748b;
+  --ventas-color-borde: #e2e8f0;
+  --ventas-radio-borde: 12px;
+  --ventas-sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --ventas-sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --ventas-sombra-intensa: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --ventas-transicion-rapida: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --ventas-transicion-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.libro-ventas {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.libro-ventas .contenedor-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--ventas-color-fondo);
+  border-radius: var(--ventas-radio-borde);
+  box-shadow: var(--ventas-sombra-intensa);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.libro-ventas .cabecera-seccion {
+  background: linear-gradient(135deg, var(--ventas-color-primario), var(--ventas-color-primario-hover));
+  color: white;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.libro-ventas .cabecera-seccion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+}
+
+.libro-ventas .titulo-grupo {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-ventas .titulo-principal {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.libro-ventas .subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.libro-ventas .resumen-cabecera {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-ventas .indicador-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.libro-ventas .etiqueta-indicador {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.libro-ventas .valor-indicador {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.libro-ventas .layout-contenido {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 600px;
+}
+
+.libro-ventas .panel-formulario {
+  background: var(--ventas-color-fondo);
+  border-radius: var(--ventas-radio-borde);
+  box-shadow: var(--ventas-sombra-suave);
+  border: 1px solid var(--ventas-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-ventas .cabecera-panel {
+  background: var(--ventas-color-secundario);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--ventas-color-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.libro-ventas .titulo-panel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ventas-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.libro-ventas .icono-panel {
+  opacity: 0.8;
+}
+
+.libro-ventas .contador-ventas {
+  display: flex;
+  align-items: center;
+}
+
+.libro-ventas .badge-contador {
+  background: var(--ventas-color-primario);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.libro-ventas .formulario-venta {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.libro-ventas .grupo-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.libro-ventas .campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.libro-ventas .etiqueta-formulario {
+  font-weight: 600;
+  color: var(--ventas-color-texto);
+  font-size: 0.9rem;
+}
+
+.libro-ventas .input-formulario,
+.libro-ventas .textarea-formulario {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--ventas-color-borde);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--ventas-transicion-rapida);
+  background: var(--ventas-color-fondo);
+  font-family: inherit;
+}
+
+.libro-ventas .input-formulario:focus,
+.libro-ventas .textarea-formulario:focus {
+  outline: none;
+  border-color: var(--ventas-color-primario);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.libro-ventas .textarea-formulario {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.libro-ventas .input-monto:focus {
+  border-color: var(--ventas-color-base);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.libro-ventas .panel-totales {
+  background: var(--ventas-color-secundario);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--ventas-color-borde);
+}
+
+.libro-ventas .desglose-impuestos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.libro-ventas .item-impuesto,
+.libro-ventas .item-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.libro-ventas .etiqueta-impuesto {
+  color: var(--ventas-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-ventas .valor-impuesto {
+  color: var(--ventas-color-iva);
+  font-weight: 600;
+}
+
+.libro-ventas .etiqueta-total {
+  color: var(--ventas-color-texto);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.libro-ventas .valor-total {
+  color: var(--ventas-color-total);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.libro-ventas .separador-impuestos {
+  height: 1px;
+  background: var(--ventas-color-borde);
+  margin: 0.5rem 0;
+}
+
+.libro-ventas .btn-primario {
+  width: 100%;
+  background: linear-gradient(135deg, var(--ventas-color-primario), var(--ventas-color-primario-hover));
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--ventas-transicion-media);
+  cursor: pointer;
+  box-shadow: var(--ventas-sombra-suave);
+}
+
+.libro-ventas .btn-primario:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ventas-sombra-media);
+}
+
+.libro-ventas .btn-registrar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.libro-ventas .btn-registrar:disabled:hover {
+  transform: none;
+  box-shadow: var(--ventas-sombra-suave);
+}
+
+.libro-ventas .panel-lista {
+  background: var(--ventas-color-fondo);
+  border-radius: var(--ventas-radio-borde);
+  box-shadow: var(--ventas-sombra-suave);
+  border: 1px solid var(--ventas-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-ventas .contenedor-lista {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.libro-ventas .lista-ventas {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-height: 500px;
+}
+
+.libro-ventas .tarjeta-venta {
+  background: var(--ventas-color-fondo);
+  border: 1px solid var(--ventas-color-borde);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: var(--ventas-transicion-rapida);
+  cursor: pointer;
+}
+
+.libro-ventas .tarjeta-venta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ventas-sombra-media);
+  border-color: var(--ventas-color-primario);
+}
+
+.libro-ventas .tarjeta-venta:last-child {
+  margin-bottom: 0;
+}
+
+.libro-ventas .venta-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.libro-ventas .venta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-ventas .venta-fecha {
+  font-size: 0.9rem;
+  color: var(--ventas-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-ventas .venta-factura {
+  font-size: 0.8rem;
+  color: var(--ventas-color-primario);
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.libro-ventas .venta-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ventas-color-total);
+}
+
+.libro-ventas .venta-cliente {
+  font-weight: 600;
+  color: var(--ventas-color-texto);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.libro-ventas .venta-descripcion {
+  color: var(--ventas-color-texto-secundario);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.libro-ventas .venta-desglose {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ventas-color-borde);
+}
+
+.libro-ventas .item-desglose {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--ventas-color-texto-secundario);
+}
+
+.libro-ventas .item-desglose span:last-child {
+  font-weight: 600;
+  color: var(--ventas-color-texto);
+}
+
+.libro-ventas .texto-iva {
+  color: var(--ventas-color-iva) !important;
+}
+
+.libro-ventas .resumen-general {
+  background: var(--ventas-color-secundario);
+  border-top: 1px solid var(--ventas-color-borde);
+  padding: 1.5rem 2rem;
+}
+
+.libro-ventas .resumen-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.libro-ventas .resumen-item:not(:last-child) {
+  border-bottom: 1px solid var(--ventas-color-borde);
+}
+
+.libro-ventas .resumen-total {
+  padding-top: 1rem;
+  border-top: 2px solid var(--ventas-color-borde);
+  margin-top: 0.5rem;
+}
+
+.libro-ventas .resumen-etiqueta {
+  color: var(--ventas-color-texto);
+  font-weight: 500;
+}
+
+.libro-ventas .resumen-valor {
+  font-weight: 600;
+  color: var(--ventas-color-texto);
+}
+
+.libro-ventas .texto-total {
+  color: var(--ventas-color-total);
+  font-size: 1.1rem;
+}
+
+.libro-ventas .estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--ventas-color-texto-secundario);
+}
+
+.libro-ventas .spinner-elegante {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--ventas-color-borde);
+  border-left: 3px solid var(--ventas-color-primario);
+  border-radius: 50%;
+  animation: ventasSpin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.libro-ventas .texto-cargando {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.libro-ventas .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--ventas-color-texto-secundario);
+  flex: 1;
+}
+
+.libro-ventas .icono-vacio {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.libro-ventas .titulo-vacio {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ventas-color-texto);
+}
+
+.libro-ventas .descripcion-vacio {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.libro-ventas .notificacion {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: ventasSlideInRight 0.3s ease-out;
+}
+
+.libro-ventas .notificacion.exito {
+  background: var(--ventas-color-exito);
+}
+
+.libro-ventas .notificacion.error {
+  background: var(--ventas-color-error);
+}
+
+.libro-ventas .notificacion-contenido {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  box-shadow: var(--ventas-sombra-media);
+  min-width: 300px;
+}
+
+.libro-ventas .notificacion-mensaje {
+  flex: 1;
+  font-weight: 500;
+}
+
+.libro-ventas .notificacion-cerrar {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: var(--ventas-transicion-rapida);
+}
+
+.libro-ventas .notificacion-cerrar:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animaciones específicas para ventas */
+@keyframes ventasSlideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ventasSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive para ventas */
+@media (max-width: 1024px) {
+  .libro-ventas .layout-contenido {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .libro-ventas {
+    padding: 1rem;
+  }
+  
+  .libro-ventas .cabecera-seccion {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-ventas .indicador-total {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .libro-ventas .grupo-campos {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .libro-ventas .venta-cabecera {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-ventas .venta-desglose {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .libro-ventas .resumen-general {
+    padding: 1.5rem;
+  }
+  
+  .libro-ventas .notificacion {
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .libro-ventas .notificacion-contenido {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .libro-ventas .layout-contenido {
+    padding: 1rem;
+  }
+  
+  .libro-ventas .formulario-venta {
+    padding: 1.5rem;
+  }
+  
+  .libro-ventas .cabecera-panel {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .libro-ventas .panel-totales {
+    padding: 1.25rem;
+  }
+}

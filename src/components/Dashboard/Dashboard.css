@@ -1,0 +1,786 @@
+/* Dashboard.css */
+.dashboard {
+  /* Variables específicas para dashboard */
+  --dashboard-color-primario: #059669;
+  --dashboard-color-primario-hover: #047857;
+  --dashboard-color-venta: #10b981;
+  --dashboard-color-compra: #0ea5e9;
+  --dashboard-color-utilidad: #059669;
+  --dashboard-color-perdida: #dc2626;
+  --dashboard-color-iva-generado: #8b5cf6;
+  --dashboard-color-iva-pagado: #f59e0b;
+  
+  /* Variables globales con scope */
+  --dashboard-color-fondo: #ffffff;
+  --dashboard-color-secundario: #f8fafc;
+  --dashboard-color-texto: #1e293b;
+  --dashboard-color-texto-secundario: #64748b;
+  --dashboard-color-borde: #e2e8f0;
+  --dashboard-radio-borde: 12px;
+  --dashboard-sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dashboard-sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --dashboard-sombra-intensa: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --dashboard-transicion-rapida: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --dashboard-transicion-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.dashboard .contenedor-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--dashboard-color-fondo);
+  border-radius: var(--dashboard-radio-borde);
+  box-shadow: var(--dashboard-sombra-intensa);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.dashboard .cabecera-seccion {
+  background: linear-gradient(135deg, var(--dashboard-color-primario), var(--dashboard-color-primario-hover));
+  color: white;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard .cabecera-seccion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+}
+
+.dashboard .titulo-grupo {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard .titulo-principal {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.dashboard .subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.dashboard .estado-actualizacion {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard .badge-actualizado {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Grid de Métricas Principales */
+.dashboard .grid-metricas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--dashboard-color-secundario);
+  border-bottom: 1px solid var(--dashboard-color-borde);
+}
+
+.dashboard .tarjeta-metrica {
+  background: var(--dashboard-color-fondo);
+  border-radius: var(--dashboard-radio-borde);
+  padding: 2rem;
+  box-shadow: var(--dashboard-sombra-suave);
+  border: 1px solid var(--dashboard-color-borde);
+  transition: var(--dashboard-transicion-media);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard .tarjeta-metrica::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+
+.dashboard .tarjeta-metrica:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--dashboard-sombra-media);
+}
+
+.dashboard .metrica-ventas {
+  border-left: 4px solid var(--dashboard-color-venta);
+}
+
+.dashboard .metrica-compras {
+  border-left: 4px solid var(--dashboard-color-compra);
+}
+
+.dashboard .metrica-cuentas {
+  border-left: 4px solid var(--dashboard-color-iva-generado);
+}
+
+.dashboard .metrica-utilidad {
+  border-left: 4px solid var(--dashboard-color-utilidad);
+}
+
+.dashboard .metrica-perdida {
+  border-left: 4px solid var(--dashboard-color-perdida);
+}
+
+.dashboard .contenido-metrica {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.dashboard .texto-metrica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboard .valor-metrica {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--dashboard-color-texto);
+  line-height: 1;
+}
+
+.dashboard .etiqueta-metrica {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+}
+
+.dashboard .tendencia-metrica {
+  font-size: 0.85rem;
+  color: var(--dashboard-color-texto-secundario);
+  font-weight: 500;
+}
+
+.dashboard .icono-metrica {
+  color: currentColor;
+  opacity: 0.8;
+}
+
+/* Layout de Contenido */
+.dashboard .layout-contenido {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Panel de Análisis */
+.dashboard .panel-analisis {
+  background: var(--dashboard-color-fondo);
+  border-radius: var(--dashboard-radio-borde);
+  box-shadow: var(--dashboard-sombra-suave);
+  border: 1px solid var(--dashboard-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard .cabecera-panel {
+  background: var(--dashboard-color-secundario);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--dashboard-color-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard .titulo-panel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard .icono-panel {
+  opacity: 0.8;
+}
+
+.dashboard .contenido-analisis {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Grid de Estadísticas */
+.dashboard .grid-estadisticas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.dashboard .tarjeta-estadistica {
+  background: var(--dashboard-color-secundario);
+  border-radius: var(--dashboard-radio-borde);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--dashboard-color-borde);
+  transition: var(--dashboard-transicion-rapida);
+}
+
+.dashboard .tarjeta-estadistica:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dashboard-sombra-suave);
+}
+
+.dashboard .icono-estadistica {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.dashboard .estadistica-transacciones {
+  background: var(--dashboard-color-primario);
+}
+
+.dashboard .estadistica-iva-generado {
+  background: var(--dashboard-color-iva-generado);
+}
+
+.dashboard .estadistica-iva-pagado {
+  background: var(--dashboard-color-iva-pagado);
+}
+
+.dashboard .contenido-estadistica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dashboard .valor-estadistica {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dashboard-color-texto);
+}
+
+.dashboard .etiqueta-estadistica {
+  font-size: 0.9rem;
+  color: var(--dashboard-color-texto-secundario);
+  font-weight: 500;
+}
+
+/* Gráfico Comparativo */
+.dashboard .seccion-grafico {
+  background: var(--dashboard-color-secundario);
+  border-radius: var(--dashboard-radio-borde);
+  padding: 1.5rem;
+  border: 1px solid var(--dashboard-color-borde);
+}
+
+.dashboard .titulo-seccion {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  margin: 0 0 1.5rem 0;
+}
+
+.dashboard .contenedor-grafico {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard .barra-comparativa {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard .etiqueta-barra {
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  min-width: 80px;
+  font-size: 0.9rem;
+}
+
+.dashboard .contenedor-barra {
+  flex: 1;
+  background: var(--dashboard-color-borde);
+  border-radius: 50px;
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dashboard .barra-progreso {
+  height: 100%;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1rem;
+  transition: var(--dashboard-transicion-media);
+  min-width: 120px;
+}
+
+.dashboard .barra-ventas {
+  background: linear-gradient(90deg, var(--dashboard-color-venta), #34d399);
+}
+
+.dashboard .barra-compras {
+  background: linear-gradient(90deg, var(--dashboard-color-compra), #60a5fa);
+}
+
+.dashboard .texto-barra {
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Estado de Resultados */
+.dashboard .seccion-estado-resultados {
+  background: var(--dashboard-color-secundario);
+  border-radius: var(--dashboard-radio-borde);
+  padding: 1.5rem;
+  border: 1px solid var(--dashboard-color-borde);
+}
+
+.dashboard .tabla-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard .fila-resultado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--dashboard-color-fondo);
+  border-radius: 8px;
+  border: 1px solid var(--dashboard-color-borde);
+}
+
+.dashboard .fila-total {
+  background: var(--dashboard-color-primario);
+  color: white;
+  border: none;
+}
+
+.dashboard .concepto-resultado {
+  font-weight: 600;
+  color: inherit;
+}
+
+.dashboard .monto-resultado {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.dashboard .monto-ingreso {
+  color: var(--dashboard-color-venta);
+}
+
+.dashboard .monto-gasto {
+  color: var(--dashboard-color-compra);
+}
+
+.dashboard .monto-utilidad {
+  color: #10b981;
+}
+
+.dashboard .monto-perdida {
+  color: #ef4444;
+}
+
+.dashboard .fila-total .monto-resultado {
+  color: white;
+}
+
+/* Panel de Actividad */
+.dashboard .panel-actividad {
+  background: var(--dashboard-color-fondo);
+  border-radius: var(--dashboard-radio-borde);
+  box-shadow: var(--dashboard-sombra-suave);
+  border: 1px solid var(--dashboard-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard .contenido-actividad {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard .lista-actividad {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-height: 400px;
+}
+
+.dashboard .tarjeta-actividad {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--dashboard-color-secundario);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  transition: var(--dashboard-transicion-rapida);
+  border: 1px solid var(--dashboard-color-borde);
+}
+
+.dashboard .tarjeta-actividad:hover {
+  transform: translateX(4px);
+  box-shadow: var(--dashboard-sombra-suave);
+}
+
+.dashboard .tarjeta-actividad:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard .icono-actividad {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.dashboard .contenido-actividad {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dashboard .titulo-actividad {
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  font-size: 0.95rem;
+}
+
+.dashboard .detalle-actividad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard .fecha-actividad {
+  font-size: 0.85rem;
+  color: var(--dashboard-color-texto-secundario);
+}
+
+.dashboard .monto-actividad {
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  font-size: 0.9rem;
+}
+
+.dashboard .pie-actividad {
+  background: var(--dashboard-color-secundario);
+  border-top: 1px solid var(--dashboard-color-borde);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard .info-sistema {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dashboard .etiqueta-sistema {
+  font-size: 0.85rem;
+  color: var(--dashboard-color-texto-secundario);
+}
+
+.dashboard .fecha-sistema {
+  font-weight: 600;
+  color: var(--dashboard-color-texto);
+  font-size: 0.9rem;
+}
+
+.dashboard .btn-actualizar {
+  background: var(--dashboard-color-primario);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--dashboard-transicion-rapida);
+  cursor: pointer;
+}
+
+.dashboard .btn-actualizar:hover {
+  background: var(--dashboard-color-primario-hover);
+  transform: translateY(-1px);
+}
+
+.dashboard .contador-actividad {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard .badge-contador {
+  background: var(--dashboard-color-primario);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Panel del Proyecto */
+.dashboard .panel-proyecto {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  color: white;
+  margin: 0 2rem 2rem 2rem;
+  border-radius: var(--dashboard-radio-borde);
+  overflow: hidden;
+}
+
+.dashboard .contenido-proyecto {
+  padding: 2rem;
+  text-align: center;
+}
+
+.dashboard .titulo-proyecto {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+  color: white;
+}
+
+.dashboard .grid-proyecto {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.dashboard .item-proyecto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard .valor-proyecto {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.dashboard .etiqueta-proyecto {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Estados */
+.dashboard .estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--dashboard-color-texto-secundario);
+}
+
+.dashboard .spinner-elegante {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--dashboard-color-borde);
+  border-left: 3px solid var(--dashboard-color-primario);
+  border-radius: 50%;
+  animation: dashboardSpin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.dashboard .texto-cargando {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.dashboard .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--dashboard-color-texto-secundario);
+  flex: 1;
+}
+
+.dashboard .icono-vacio {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.dashboard .titulo-vacio {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--dashboard-color-texto);
+}
+
+.dashboard .descripcion-vacio {
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Animaciones */
+@keyframes dashboardSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard .grid-metricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard .layout-contenido {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard .grid-estadisticas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard .grid-proyecto {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard {
+    padding: 1rem;
+  }
+  
+  .dashboard .cabecera-seccion {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .dashboard .estado-actualizacion {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard .grid-metricas {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard .grid-estadisticas {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard .grid-proyecto {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .dashboard .barra-comparativa {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .dashboard .etiqueta-barra {
+    min-width: auto;
+  }
+  
+  .dashboard .pie-actividad {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .dashboard .btn-actualizar {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard .layout-contenido {
+    padding: 1rem;
+  }
+  
+  .dashboard .contenido-analisis {
+    padding: 1.5rem;
+  }
+  
+  .dashboard .cabecera-panel {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .dashboard .lista-actividad {
+    padding: 0.75rem;
+  }
+  
+  .dashboard .tarjeta-actividad {
+    padding: 0.75rem;
+  }
+  
+  .dashboard .panel-proyecto {
+    margin: 0 1rem 1rem 1rem;
+  }
+  
+  .dashboard .contenido-proyecto {
+    padding: 1.5rem;
+  }
+}

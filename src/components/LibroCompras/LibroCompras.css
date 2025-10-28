@@ -1,0 +1,668 @@
+/* LibroCompras.css */
+.libro-compras {
+  /* Variables específicas para compras */
+  --compras-color-primario: #0ea5e9;
+  --compras-color-primario-hover: #0284c7;
+  --compras-color-iva: #8b5cf6;
+  --compras-color-total: #0369a1;
+  --compras-color-base: #3b82f6;
+  --compras-color-credito: #10b981;
+  --compras-color-exito: #10b981;
+  --compras-color-error: #ef4444;
+  
+  /* Colores para tipos de gasto */
+  --compras-color-compra: #0ea5e9;
+  --compras-color-servicio: #8b5cf6;
+  --compras-color-gasto: #f59e0b;
+  --compras-color-activo: #10b981;
+  --compras-color-otro: #64748b;
+  
+  /* Variables globales con scope */
+  --compras-color-fondo: #ffffff;
+  --compras-color-secundario: #f8fafc;
+  --compras-color-texto: #1e293b;
+  --compras-color-texto-secundario: #64748b;
+  --compras-color-borde: #e2e8f0;
+  --compras-radio-borde: 12px;
+  --compras-sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --compras-sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --compras-sombra-intensa: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --compras-transicion-rapida: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --compras-transicion-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.libro-compras {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.libro-compras .contenedor-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--compras-color-fondo);
+  border-radius: var(--compras-radio-borde);
+  box-shadow: var(--compras-sombra-intensa);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.libro-compras .cabecera-seccion {
+  background: linear-gradient(135deg, var(--compras-color-primario), var(--compras-color-primario-hover));
+  color: white;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.libro-compras .cabecera-seccion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+}
+
+.libro-compras .titulo-grupo {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-compras .titulo-principal {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.libro-compras .subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.libro-compras .resumen-cabecera {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-compras .indicador-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.libro-compras .etiqueta-indicador {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.libro-compras .valor-indicador {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.libro-compras .layout-contenido {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 600px;
+}
+
+.libro-compras .panel-formulario {
+  background: var(--compras-color-fondo);
+  border-radius: var(--compras-radio-borde);
+  box-shadow: var(--compras-sombra-suave);
+  border: 1px solid var(--compras-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-compras .cabecera-panel {
+  background: var(--compras-color-secundario);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--compras-color-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.libro-compras .titulo-panel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--compras-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.libro-compras .icono-panel {
+  opacity: 0.8;
+}
+
+.libro-compras .contador-compras {
+  display: flex;
+  align-items: center;
+}
+
+.libro-compras .badge-contador {
+  background: var(--compras-color-primario);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.libro-compras .formulario-compra {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.libro-compras .grupo-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.libro-compras .campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.libro-compras .etiqueta-formulario {
+  font-weight: 600;
+  color: var(--compras-color-texto);
+  font-size: 0.9rem;
+}
+
+.libro-compras .input-formulario,
+.libro-compras .textarea-formulario,
+.libro-compras .select-formulario {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--compras-color-borde);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--compras-transicion-rapida);
+  background: var(--compras-color-fondo);
+  font-family: inherit;
+}
+
+.libro-compras .input-formulario:focus,
+.libro-compras .textarea-formulario:focus,
+.libro-compras .select-formulario:focus {
+  outline: none;
+  border-color: var(--compras-color-primario);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.libro-compras .textarea-formulario {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.libro-compras .input-monto:focus {
+  border-color: var(--compras-color-base);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.libro-compras .panel-totales {
+  background: var(--compras-color-secundario);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--compras-color-borde);
+}
+
+.libro-compras .desglose-impuestos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.libro-compras .item-impuesto,
+.libro-compras .item-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.libro-compras .etiqueta-impuesto {
+  color: var(--compras-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-compras .valor-impuesto {
+  color: var(--compras-color-iva);
+  font-weight: 600;
+}
+
+.libro-compras .etiqueta-total {
+  color: var(--compras-color-texto);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.libro-compras .valor-total {
+  color: var(--compras-color-total);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.libro-compras .separador-impuestos {
+  height: 1px;
+  background: var(--compras-color-borde);
+  margin: 0.5rem 0;
+}
+
+.libro-compras .btn-primario {
+  width: 100%;
+  background: linear-gradient(135deg, var(--compras-color-primario), var(--compras-color-primario-hover));
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--compras-transicion-media);
+  cursor: pointer;
+  box-shadow: var(--compras-sombra-suave);
+}
+
+.libro-compras .btn-primario:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--compras-sombra-media);
+}
+
+.libro-compras .btn-registrar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.libro-compras .btn-registrar:disabled:hover {
+  transform: none;
+  box-shadow: var(--compras-sombra-suave);
+}
+
+.libro-compras .panel-lista {
+  background: var(--compras-color-fondo);
+  border-radius: var(--compras-radio-borde);
+  box-shadow: var(--compras-sombra-suave);
+  border: 1px solid var(--compras-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-compras .contenedor-lista {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.libro-compras .lista-compras {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-height: 500px;
+}
+
+.libro-compras .tarjeta-compra {
+  background: var(--compras-color-fondo);
+  border: 1px solid var(--compras-color-borde);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: var(--compras-transicion-rapida);
+  cursor: pointer;
+}
+
+.libro-compras .tarjeta-compra:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--compras-sombra-media);
+  border-color: var(--compras-color-primario);
+}
+
+.libro-compras .tarjeta-compra:last-child {
+  margin-bottom: 0;
+}
+
+.libro-compras .compra-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.libro-compras .compra-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-compras .compra-fecha {
+  font-size: 0.9rem;
+  color: var(--compras-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-compras .compra-factura {
+  font-size: 0.8rem;
+  color: var(--compras-color-primario);
+  font-weight: 600;
+  background: rgba(14, 165, 233, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.libro-compras .compra-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--compras-color-total);
+}
+
+.libro-compras .compra-proveedor {
+  font-weight: 600;
+  color: var(--compras-color-texto);
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.libro-compras .compra-detalles {
+  margin-bottom: 0.75rem;
+}
+
+.libro-compras .badge-tipo-gasto {
+  padding: 0.375rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.libro-compras .compra-descripcion {
+  color: var(--compras-color-texto-secundario);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.libro-compras .compra-desglose {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--compras-color-borde);
+}
+
+.libro-compras .item-desglose {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--compras-color-texto-secundario);
+}
+
+.libro-compras .item-desglose span:last-child {
+  font-weight: 600;
+  color: var(--compras-color-texto);
+}
+
+.libro-compras .texto-iva {
+  color: var(--compras-color-iva) !important;
+}
+
+.libro-compras .texto-credito {
+  color: var(--compras-color-credito) !important;
+}
+
+.libro-compras .resumen-general {
+  background: var(--compras-color-secundario);
+  border-top: 1px solid var(--compras-color-borde);
+  padding: 1.5rem 2rem;
+}
+
+.libro-compras .resumen-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.libro-compras .resumen-item:not(:last-child) {
+  border-bottom: 1px solid var(--compras-color-borde);
+}
+
+.libro-compras .resumen-total {
+  padding-top: 1rem;
+  border-top: 2px solid var(--compras-color-borde);
+  margin-top: 0.5rem;
+}
+
+.libro-compras .resumen-etiqueta {
+  color: var(--compras-color-texto);
+  font-weight: 500;
+}
+
+.libro-compras .resumen-valor {
+  font-weight: 600;
+  color: var(--compras-color-texto);
+}
+
+.libro-compras .texto-total {
+  color: var(--compras-color-total);
+  font-size: 1.1rem;
+}
+
+.libro-compras .estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--compras-color-texto-secundario);
+}
+
+.libro-compras .spinner-elegante {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--compras-color-borde);
+  border-left: 3px solid var(--compras-color-primario);
+  border-radius: 50%;
+  animation: comprasSpin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.libro-compras .texto-cargando {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.libro-compras .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--compras-color-texto-secundario);
+  flex: 1;
+}
+
+.libro-compras .icono-vacio {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.libro-compras .titulo-vacio {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--compras-color-texto);
+}
+
+.libro-compras .descripcion-vacio {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.libro-compras .notificacion {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: comprasSlideInRight 0.3s ease-out;
+}
+
+.libro-compras .notificacion.exito {
+  background: var(--compras-color-exito);
+}
+
+.libro-compras .notificacion.error {
+  background: var(--compras-color-error);
+}
+
+.libro-compras .notificacion-contenido {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  box-shadow: var(--compras-sombra-media);
+  min-width: 300px;
+}
+
+.libro-compras .notificacion-mensaje {
+  flex: 1;
+  font-weight: 500;
+}
+
+.libro-compras .notificacion-cerrar {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: var(--compras-transicion-rapida);
+}
+
+.libro-compras .notificacion-cerrar:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animaciones específicas para compras */
+@keyframes comprasSlideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes comprasSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive para compras */
+@media (max-width: 1024px) {
+  .libro-compras .layout-contenido {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .libro-compras {
+    padding: 1rem;
+  }
+  
+  .libro-compras .cabecera-seccion {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-compras .indicador-total {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .libro-compras .grupo-campos {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .libro-compras .compra-cabecera {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-compras .compra-desglose {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .libro-compras .resumen-general {
+    padding: 1.5rem;
+  }
+  
+  .libro-compras .notificacion {
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .libro-compras .notificacion-contenido {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .libro-compras .layout-contenido {
+    padding: 1rem;
+  }
+  
+  .libro-compras .formulario-compra {
+    padding: 1.5rem;
+  }
+  
+  .libro-compras .cabecera-panel {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .libro-compras .panel-totales {
+    padding: 1.25rem;
+  }
+}

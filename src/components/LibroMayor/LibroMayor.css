@@ -1,0 +1,619 @@
+/* LibroMayor.css */
+.libro-mayor {
+  /* Variables específicas para libro mayor */
+  --mayor-color-primario: #dc2626;
+  --mayor-color-primario-hover: #b91c1c;
+  --mayor-color-debe: #10b981;
+  --mayor-color-haber: #ef4444;
+  --mayor-color-saldo-deudor: #059669;
+  --mayor-color-saldo-acreedor: #dc2626;
+  
+  /* Colores para tipos de cuenta */
+  --mayor-color-activo: #10b981;
+  --mayor-color-pasivo: #ef4444;
+  --mayor-color-patrimonio: #3b82f6;
+  --mayor-color-ingreso: #f59e0b;
+  --mayor-color-gasto: #06b6d4;
+  
+  /* Variables globales con scope */
+  --mayor-color-fondo: #ffffff;
+  --mayor-color-secundario: #f8fafc;
+  --mayor-color-texto: #1e293b;
+  --mayor-color-texto-secundario: #64748b;
+  --mayor-color-borde: #e2e8f0;
+  --mayor-radio-borde: 12px;
+  --mayor-sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --mayor-sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --mayor-sombra-intensa: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --mayor-transicion-rapida: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --mayor-transicion-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.libro-mayor {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.libro-mayor .contenedor-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--mayor-color-fondo);
+  border-radius: var(--mayor-radio-borde);
+  box-shadow: var(--mayor-sombra-intensa);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.libro-mayor .cabecera-seccion {
+  background: linear-gradient(135deg, var(--mayor-color-primario), var(--mayor-color-primario-hover));
+  color: white;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.libro-mayor .cabecera-seccion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+}
+
+.libro-mayor .titulo-grupo {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-mayor .titulo-principal {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.libro-mayor .subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.libro-mayor .resumen-cabecera {
+  position: relative;
+  z-index: 1;
+}
+
+.libro-mayor .indicador-saldo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.libro-mayor .etiqueta-saldo {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.libro-mayor .valor-saldo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.libro-mayor .saldo-deudor {
+  color: var(--mayor-color-saldo-deudor);
+}
+
+.libro-mayor .saldo-acreedor {
+  color: var(--mayor-color-saldo-acreedor);
+}
+
+.libro-mayor .layout-contenido {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 600px;
+}
+
+/* Panel de Selección */
+.libro-mayor .panel-seleccion {
+  background: var(--mayor-color-fondo);
+  border-radius: var(--mayor-radio-borde);
+  box-shadow: var(--mayor-sombra-suave);
+  border: 1px solid var(--mayor-color-borde);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-mayor .cabecera-panel {
+  background: var(--mayor-color-secundario);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--mayor-color-borde);
+}
+
+.libro-mayor .titulo-panel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mayor-color-texto);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.libro-mayor .icono-panel {
+  opacity: 0.8;
+}
+
+.libro-mayor .contenido-seleccion {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.libro-mayor .campo-seleccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.libro-mayor .etiqueta-seleccion {
+  font-weight: 600;
+  color: var(--mayor-color-texto);
+  font-size: 1rem;
+}
+
+.libro-mayor .select-seleccion {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--mayor-color-borde);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--mayor-transicion-rapida);
+  background: var(--mayor-color-fondo);
+}
+
+.libro-mayor .select-seleccion:focus {
+  outline: none;
+  border-color: var(--mayor-color-primario);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.libro-mayor .info-cuenta {
+  background: var(--mayor-color-secundario);
+  border-radius: var(--mayor-radio-borde);
+  border: 1px solid var(--mayor-color-borde);
+  overflow: hidden;
+}
+
+.libro-mayor .cabecera-info {
+  background: var(--mayor-color-primario);
+  color: white;
+  padding: 1rem 1.5rem;
+}
+
+.libro-mayor .titulo-info {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.libro-mayor .detalles-cuenta {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.libro-mayor .detalle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.libro-mayor .detalle-item:not(:last-child) {
+  border-bottom: 1px solid var(--mayor-color-borde);
+}
+
+.libro-mayor .detalle-etiqueta {
+  font-weight: 600;
+  color: var(--mayor-color-texto);
+  font-size: 0.9rem;
+}
+
+.libro-mayor .detalle-valor {
+  color: var(--mayor-color-texto);
+  font-weight: 500;
+}
+
+.libro-mayor .codigo-cuenta {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-weight: 700;
+  color: var(--mayor-color-primario);
+}
+
+.libro-mayor .badge-tipo {
+  padding: 0.375rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Panel Principal */
+.libro-mayor .panel-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Panel de Resumen */
+.libro-mayor .panel-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.libro-mayor .tarjeta-total {
+  background: var(--mayor-color-fondo);
+  border-radius: var(--mayor-radio-borde);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--mayor-sombra-suave);
+  border: 1px solid var(--mayor-color-borde);
+  transition: var(--mayor-transicion-media);
+}
+
+.libro-mayor .tarjeta-total:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mayor-sombra-media);
+}
+
+.libro-mayor .tarjeta-saldo {
+  border: 2px solid transparent;
+}
+
+.libro-mayor .tarjeta-saldo.saldo-deudor {
+  border-color: var(--mayor-color-saldo-deudor);
+}
+
+.libro-mayor .tarjeta-saldo.saldo-acreedor {
+  border-color: var(--mayor-color-saldo-acreedor);
+}
+
+.libro-mayor .icono-total {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.libro-mayor .total-debe {
+  background: var(--mayor-color-debe);
+}
+
+.libro-mayor .total-haber {
+  background: var(--mayor-color-haber);
+}
+
+.libro-mayor .icono-total.saldo-deudor {
+  background: var(--mayor-color-saldo-deudor);
+}
+
+.libro-mayor .icono-total.saldo-acreedor {
+  background: var(--mayor-color-saldo-acreedor);
+}
+
+.libro-mayor .contenido-total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-mayor .valor-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--mayor-color-texto);
+}
+
+.libro-mayor .etiqueta-total {
+  font-size: 0.9rem;
+  color: var(--mayor-color-texto-secundario);
+  font-weight: 500;
+}
+
+/* Panel de Movimientos */
+.libro-mayor .panel-movimientos {
+  background: var(--mayor-color-fondo);
+  border-radius: var(--mayor-radio-borde);
+  box-shadow: var(--mayor-sombra-suave);
+  border: 1px solid var(--mayor-color-borde);
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.libro-mayor .contenedor-lista {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.libro-mayor .lista-movimientos {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  max-height: 500px;
+}
+
+.libro-mayor .tarjeta-movimiento {
+  background: var(--mayor-color-fondo);
+  border: 1px solid var(--mayor-color-borde);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: var(--mayor-transicion-rapida);
+  cursor: pointer;
+}
+
+.libro-mayor .tarjeta-movimiento:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mayor-sombra-media);
+  border-color: var(--mayor-color-primario);
+}
+
+.libro-mayor .tarjeta-movimiento:last-child {
+  margin-bottom: 0;
+}
+
+.libro-mayor .movimiento-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.libro-mayor .movimiento-fecha {
+  font-size: 0.9rem;
+  color: var(--mayor-color-texto-secundario);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.libro-mayor .movimiento-descripcion {
+  font-weight: 500;
+  color: var(--mayor-color-texto);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.libro-mayor .movimiento-detalles {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mayor-color-borde);
+}
+
+.libro-mayor .columna-monto {
+  display: flex;
+  gap: 2rem;
+}
+
+.libro-mayor .monto-debe,
+.libro-mayor .monto-haber {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-mayor .etiqueta-monto {
+  font-size: 0.8rem;
+  color: var(--mayor-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-mayor .valor-monto {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.libro-mayor .monto-debe .valor-monto {
+  color: var(--mayor-color-debe);
+}
+
+.libro-mayor .monto-haber .valor-monto {
+  color: var(--mayor-color-haber);
+}
+
+.libro-mayor .columna-saldo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.libro-mayor .columna-saldo .etiqueta-saldo {
+  font-size: 0.8rem;
+  color: var(--mayor-color-texto-secundario);
+  font-weight: 500;
+}
+
+.libro-mayor .columna-saldo .valor-saldo {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Estados */
+.libro-mayor .estado-seleccion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--mayor-color-texto-secundario);
+  flex: 1;
+}
+
+.libro-mayor .icono-seleccion {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.libro-mayor .titulo-seleccion {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--mayor-color-texto);
+}
+
+.libro-mayor .descripcion-seleccion {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.libro-mayor .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--mayor-color-texto-secundario);
+  flex: 1;
+}
+
+.libro-mayor .icono-vacio {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.libro-mayor .titulo-vacio {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--mayor-color-texto);
+}
+
+.libro-mayor .descripcion-vacio {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.libro-mayor .contador-movimientos {
+  display: flex;
+  align-items: center;
+}
+
+.libro-mayor .badge-contador {
+  background: var(--mayor-color-primario);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .libro-mayor .layout-contenido {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .libro-mayor .panel-resumen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .libro-mayor {
+    padding: 1rem;
+  }
+  
+  .libro-mayor .cabecera-seccion {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .libro-mayor .indicador-saldo {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .libro-mayor .panel-resumen {
+    grid-template-columns: 1fr;
+  }
+  
+  .libro-mayor .movimiento-cabecera {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .libro-mayor .movimiento-detalles {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .libro-mayor .columna-monto {
+    justify-content: space-between;
+  }
+  
+  .libro-mayor .columna-saldo {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .libro-mayor .layout-contenido {
+    padding: 1rem;
+  }
+  
+  .libro-mayor .contenido-seleccion {
+    padding: 1.5rem;
+  }
+  
+  .libro-mayor .cabecera-panel {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .libro-mayor .detalles-cuenta {
+    padding: 1.25rem;
+  }
+  
+  .libro-mayor .lista-movimientos {
+    padding: 0.75rem;
+  }
+  
+  .libro-mayor .tarjeta-movimiento {
+    padding: 1.25rem;
+  }
+}
