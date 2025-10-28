@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 .env
 .env.*
+
+# Allow example env files
+!.env.example
