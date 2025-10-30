@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .              # la raíz del proyecto
+      dockerfile: Dockerfile
+    container_name: contaapp-web
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      # si vas a usar variables de entorno de Firebase, las puedes pasar aquí
+      - REACT_APP_FIREBASE_API_KEY=${REACT_APP_FIREBASE_API_KEY}
+      - REACT_APP_FIREBASE_AUTH_DOMAIN=${REACT_APP_FIREBASE_AUTH_DOMAIN}
+      - REACT_APP_FIREBASE_PROJECT_ID=${REACT_APP_FIREBASE_PROJECT_ID}
+      - REACT_APP_FIREBASE_STORAGE_BUCKET=${REACT_APP_FIREBASE_STORAGE_BUCKET}
+      - REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${REACT_APP_FIREBASE_MESSAGING_SENDER_ID}
+      - REACT_APP_FIREBASE_APP_ID=${REACT_APP_FIREBASE_APP_ID}
+    volumes:
+      # monta tu código del host dentro del contenedor
+      - .:/app:delegated
+      # pero NO montamos node_modules desde el host, dejamos que sea del contenedor
+      - /app/node_modules
+    # a veces react pregunta por el host, esto lo silencia
+    stdin_open: true
+    tty: true
