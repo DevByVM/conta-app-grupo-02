@@ -601,3 +601,80 @@
     min-width: auto;
   }
 }
+
+.catalogo-cuentas .btn-editar {
+  background: none;
+  border: 1px solid #2563eb; /* azul */
+  color: #2563eb;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--catalogo-transicion-rapida);
+  cursor: pointer;
+}
+
+.catalogo-cuentas .btn-editar:hover {
+  background: #2563eb;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.catalogo-cuentas .acciones-celda .btn-editar {
+  margin-right: 0.5rem;
+}
+
+/* Botón principal del formulario (Agregar / Actualizar) */
+.catalogo-cuentas .btn-form-primary {
+  background: var(--catalogo-color-acento, #4f46e5); /* usa tu variable o un violeta */
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.65rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--catalogo-transicion-rapida, 0.15s ease-in-out);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+}
+
+.catalogo-cuentas .btn-form-primary:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+/* Botón secundario (Cancelar edición) */
+.catalogo-cuentas .btn-form-secondary {
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.65rem;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--catalogo-transicion-rapida, 0.15s ease-in-out);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.catalogo-cuentas .btn-form-secondary:hover {
+  background: #d1d5db;
+}
+
+/* para que queden en línea y con espacio */
+.catalogo-cuentas .form-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  align-items: center;
+}
