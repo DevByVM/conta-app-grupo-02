@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../services/firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { 
+  obtenerTransaccionesDelProyecto 
+} from '../../services/firebase';
 import './LibroDiario.css';
 
-const LibroDiario = () => {
+const LibroDiario = ({ proyecto, usuario }) => {
   const [transacciones, setTransacciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [filtroTipo, setFiltroTipo] = useState('todos');
@@ -11,21 +12,24 @@ const LibroDiario = () => {
   const [fechaFin, setFechaFin] = useState('');
 
   useEffect(() => {
-    cargarTransacciones();
-  }, []);
+    if (proyecto && usuario) {
+      cargarTransacciones();
+    } else {
+      setCargando(false);
+    }
+  }, [proyecto, usuario]);
 
   const cargarTransacciones = async () => {
     try {
       setCargando(true);
-      const q = query(
-        collection(db, 'transacciones'), 
-        orderBy('timestamp', 'desc')
-      );
-      const querySnapshot = await getDocs(q);
-      const transaccionesData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      console.log('Cargando transacciones para proyecto:', {
+        usuario: usuario?.uid,
+        proyecto: proyecto?.id,
+        proyectoNombre: proyecto?.nombre
+      });
+      
+      const transaccionesData = await obtenerTransaccionesDelProyecto(usuario.uid, proyecto.id);
+      console.log('Transacciones cargadas:', transaccionesData);
       setTransacciones(transaccionesData);
     } catch (error) {
       console.error('Error cargando transacciones:', error);
@@ -103,13 +107,34 @@ const LibroDiario = () => {
     setFechaFin('');
   };
 
+  // Mostrar mensaje si no hay proyecto seleccionado
+  if (!proyecto || !usuario) {
+    return (
+      <div className="libro-diario">
+        <div className="estado-vacio">
+          <div className="icono-vacio">📒</div>
+          <h3 className="titulo-vacio">Selecciona un proyecto</h3>
+          <p className="descripcion-vacio">
+            Para ver el libro diario, primero selecciona un proyecto
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="libro-diario">
       <div className="contenedor-principal">
         <div className="cabecera-seccion">
           <div className="titulo-grupo">
             <h1 className="titulo-principal">Libro Diario</h1>
-            <p className="subtitulo">Registro cronológico integral de transacciones contables</p>
+            <p className="subtitulo">
+              Proyecto: <strong>{proyecto.nombre}</strong> - Registro cronológico integral de transacciones
+            </p>
+            <div className="proyecto-info">
+              <span className="proyecto-badge">Proyecto: {proyecto.nombre}</span>
+              <span className="usuario-badge">Usuario: {usuario.email}</span>
+            </div>
           </div>
           <div className="resumen-cabecera">
             <div className="indicador-total">
@@ -227,7 +252,7 @@ const LibroDiario = () => {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
               </svg>
-              Registro Cronológico
+              Registro Cronológico del Proyecto
             </h2>
             <div className="contador-transacciones">
               <span className="badge-contador">{transaccionesFiltradas.length}</span>
@@ -238,7 +263,7 @@ const LibroDiario = () => {
             {cargando ? (
               <div className="estado-cargando">
                 <div className="spinner-elegante"></div>
-                <p className="texto-cargando">Cargando registro de transacciones</p>
+                <p className="texto-cargando">Cargando transacciones del proyecto...</p>
               </div>
             ) : (
               <>
@@ -251,7 +276,7 @@ const LibroDiario = () => {
                     </div>
                     <h3 className="titulo-vacio">
                       {transacciones.length === 0 
-                        ? 'No hay transacciones registradas' 
+                        ? 'No hay transacciones en este proyecto' 
                         : 'No hay transacciones que coincidan con los filtros'
                       }
                     </h3>

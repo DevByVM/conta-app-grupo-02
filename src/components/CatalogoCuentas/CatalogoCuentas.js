@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../../services/firebase";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { 
+  obtenerCuentasDelProyecto, 
+  agregarCuentaAProyecto,
+  actualizarCuentaDelProyecto,
+  eliminarCuentaDelProyecto
+} from "../../services/firebase";
 import "./CatalogoCuentas.css";
 
-const CatalogoCuentas = () => {
+const CatalogoCuentas = ({ proyecto, usuario }) => {
   const [cuentas, setCuentas] = useState([]);
   const [nuevaCuenta, setNuevaCuenta] = useState({
     codigo: "",
@@ -35,17 +32,24 @@ const CatalogoCuentas = () => {
   };
 
   useEffect(() => {
-    cargarCuentas();
-  }, []);
+    if (proyecto && usuario) {
+      cargarCuentas();
+    } else {
+      setCargando(false);
+    }
+  }, [proyecto, usuario]);
 
   const cargarCuentas = async () => {
     try {
       setCargando(true);
-      const querySnapshot = await getDocs(collection(db, "cuentas"));
-      const cuentasData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      console.log('Cargando cuentas para:', {
+        usuario: usuario?.uid,
+        proyecto: proyecto?.id,
+        proyectoNombre: proyecto?.nombre
+      });
+      
+      const cuentasData = await obtenerCuentasDelProyecto(usuario.uid, proyecto.id);
+      console.log('Cuentas cargadas:', cuentasData);
       setCuentas(cuentasData);
     } catch (error) {
       console.error("Error cargando cuentas:", error);
@@ -69,7 +73,13 @@ const CatalogoCuentas = () => {
 
     if (nuevaCuenta.codigo && nuevaCuenta.nombre) {
       try {
-        await addDoc(collection(db, "cuentas"), {
+        console.log('Agregando cuenta a proyecto:', {
+          usuario: usuario.uid,
+          proyecto: proyecto.id,
+          cuenta: nuevaCuenta
+        });
+
+        await agregarCuentaAProyecto(usuario.uid, proyecto.id, {
           codigo: nuevaCuenta.codigo,
           nombre: nuevaCuenta.nombre,
           tipo: nuevaCuenta.tipo,
@@ -83,7 +93,7 @@ const CatalogoCuentas = () => {
         });
 
         await cargarCuentas();
-        mostrarNotificacion("Cuenta agregada exitosamente al catálogo");
+        mostrarNotificacion("Cuenta agregada exitosamente al proyecto actual", "exito");
       } catch (error) {
         console.error("Error agregando cuenta:", error);
         mostrarNotificacion("Error al registrar la cuenta", "error");
@@ -100,16 +110,28 @@ const CatalogoCuentas = () => {
     }
 
     try {
-      await updateDoc(doc(db, 'cuentas', cuentaEditando.id), {
-        codigo: nuevaCuenta.codigo,
-        nombre: nuevaCuenta.nombre,
-        tipo: nuevaCuenta.tipo,
+      console.log('Actualizando cuenta:', {
+        usuario: usuario.uid,
+        proyecto: proyecto.id,
+        cuentaId: cuentaEditando.id,
+        datos: nuevaCuenta
       });
+
+      await actualizarCuentaDelProyecto(
+        usuario.uid, 
+        proyecto.id, 
+        cuentaEditando.id, 
+        {
+          codigo: nuevaCuenta.codigo,
+          nombre: nuevaCuenta.nombre,
+          tipo: nuevaCuenta.tipo,
+        }
+      );
 
       setNuevaCuenta({ codigo: '', nombre: '', tipo: 'Activo' });
       setCuentaEditando(null);
       mostrarNotificacion('Cuenta actualizada exitosamente', 'exito');
-      cargarCuentas();
+      await cargarCuentas();
     } catch (error) {
       console.error('Error actualizando cuenta:', error);
       mostrarNotificacion('Error al actualizar la cuenta', 'error');
@@ -125,7 +147,6 @@ const CatalogoCuentas = () => {
   };
 
   const confirmarEliminacion = (cuenta) => {
-    // crea el overlay
     const modal = document.createElement("div");
     modal.className = "modal-confirmacion";
     modal.innerHTML = `
@@ -137,7 +158,7 @@ const CatalogoCuentas = () => {
           </svg>
         </div>
         <h3>Confirmar Eliminación</h3>
-        <p>¿Está seguro de eliminar la cuenta <strong>${cuenta.codigo} - ${cuenta.nombre}</strong>?</p>
+        <p>¿Está seguro de eliminar la cuenta <strong>${cuenta.codigo} - ${cuenta.nombre}</strong> del proyecto actual?</p>
         <div class="modal-acciones">
           <button class="btn-cancelar" type="button">Cancelar</button>
           <button class="btn-confirmar" type="button">Eliminar</button>
@@ -147,27 +168,29 @@ const CatalogoCuentas = () => {
 
     document.querySelector('.catalogo-cuentas').appendChild(modal);
 
-    // obtener botones
     const btnCancelar = modal.querySelector(".btn-cancelar");
     const btnConfirmar = modal.querySelector(".btn-confirmar");
 
-    // helper para cerrar y limpiar
     const cerrarModal = () => {
       if (modal && modal.parentNode) {
         modal.parentNode.removeChild(modal);
       }
     };
 
-    // cancelar
     btnCancelar.addEventListener("click", () => {
       cerrarModal();
     });
 
-    // confirmar → borrar en Firestore
     btnConfirmar.addEventListener("click", async () => {
       try {
-        await deleteDoc(doc(db, "cuentas", cuenta.id));
-        mostrarNotificacion("Cuenta eliminada correctamente", "exito");
+        console.log('Eliminando cuenta del proyecto:', {
+          usuario: usuario.uid,
+          proyecto: proyecto.id,
+          cuentaId: cuenta.id
+        });
+
+        await eliminarCuentaDelProyecto(usuario.uid, proyecto.id, cuenta.id);
+        mostrarNotificacion("Cuenta eliminada correctamente del proyecto", "exito");
         await cargarCuentas();
       } catch (error) {
         console.error("Error al eliminar la cuenta:", error);
@@ -202,12 +225,27 @@ const CatalogoCuentas = () => {
     return colores[tipo] || "var(--catalogo-color-texto)";
   };
 
+  // Mostrar mensaje si no hay proyecto seleccionado
+  if (!proyecto || !usuario) {
+    return (
+      <div className="catalogo-cuentas">
+        <div className="estado-vacio">
+          <div className="icono-vacio">📁</div>
+          <h3 className="titulo-vacio">Selecciona un proyecto</h3>
+          <p className="descripcion-vacio">
+            Para gestionar el catálogo de cuentas, primero selecciona un proyecto
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (cargando) {
     return (
       <div className="catalogo-cuentas">
         <div className="cargando-contenedor">
           <div className="spinner-elegante"></div>
-          <p className="texto-cargando">Cargando catálogo de cuentas</p>
+          <p className="texto-cargando">Cargando catálogo de cuentas del proyecto...</p>
         </div>
       </div>
     );
@@ -250,8 +288,13 @@ const CatalogoCuentas = () => {
           <div className="titulo-grupo">
             <h1 className="titulo-principal">Catálogo de Cuentas Contables</h1>
             <p className="subtitulo">
-              Sistema de gestión del plan de cuentas - El Salvador
+              Proyecto: <strong>{proyecto.nombre}</strong> - {cuentas.length} cuentas
             </p>
+            <div className="proyecto-info">
+              <span className="proyecto-badge">Proyecto: {proyecto.nombre}</span>
+              <span className="usuario-badge">Usuario: {usuario.email}</span>
+              <span className="proyecto-id">ID: {proyecto.id.substring(0, 8)}...</span>
+            </div>
           </div>
           <div className="contador-total">
             <span className="badge-total">{cuentas.length} cuentas</span>
@@ -278,6 +321,7 @@ const CatalogoCuentas = () => {
           <div className="panel-formulario">
             <div className="cabecera-panel">
               <h2 className="titulo-panel">Registrar Nueva Cuenta</h2>
+              <span className="proyecto-indicador">en {proyecto.nombre}</span>
             </div>
             <form onSubmit={manejarSubmit} className="formulario-cuenta">
               <div className="grupo-formulario">
@@ -356,7 +400,7 @@ const CatalogoCuentas = () => {
           {/* Lista de Cuentas */}
           <div className="panel-lista">
             <div className="cabecera-panel">
-              <h2 className="titulo-panel">Lista de Cuentas</h2>
+              <h2 className="titulo-panel">Cuentas del Proyecto</h2>
               <div className="filtros">
                 <select
                   className="select-filtro"
@@ -392,9 +436,9 @@ const CatalogoCuentas = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="titulo-vacio">No hay cuentas registradas</h3>
+                  <h3 className="titulo-vacio">No hay cuentas en este proyecto</h3>
                   <p className="descripcion-vacio">
-                    Comience agregando su primera cuenta contable
+                    Comience agregando la primera cuenta contable a este proyecto
                   </p>
                 </div>
               ) : (

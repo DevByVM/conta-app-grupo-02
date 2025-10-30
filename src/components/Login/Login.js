@@ -34,7 +34,6 @@ const Login = ({ onLogin }) => {
       );
       
       const user = userCredential.user;
-      
       setMensaje('¡Sesión iniciada correctamente!');
       
       const rol = await determinarRolUsuario(user.uid);
@@ -43,7 +42,7 @@ const Login = ({ onLogin }) => {
         onLogin(true, { 
           email: user.email, 
           rol: rol,
-          uid: user.uid 
+          uid: user.uid
         });
         setCargando(false);
       }, 1000);
@@ -87,14 +86,13 @@ const Login = ({ onLogin }) => {
       );
       
       const user = userCredential.user;
-      
       setMensaje('¡Cuenta creada exitosamente! Iniciando sesión...');
       
       setTimeout(() => {
         onLogin(true, { 
           email: user.email, 
           rol: 'Usuario',
-          uid: user.uid 
+          uid: user.uid
         });
         setCargando(false);
       }, 1000);
@@ -125,24 +123,68 @@ const Login = ({ onLogin }) => {
   };
 
   const usarCredencialDemo = async (demo) => {
-    setCredenciales({
-      email: demo.email,
-      password: demo.password
-    });
-    setMensaje(`Usando credenciales de ${demo.rol}`);
-    
-    setTimeout(() => {
+    try {
       setCargando(true);
-      setMensaje('Iniciando sesión con cuenta demo...');
+      setMensaje(`Iniciando sesión como ${demo.rol}...`);
       
-      setTimeout(() => {
-        onLogin(true, { 
-          email: demo.email, 
-          rol: demo.rol 
-        });
-        setCargando(false);
-      }, 1000);
-    }, 500);
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          demo.email,
+          demo.password
+        );
+        
+        const user = userCredential.user;
+        setMensaje(`¡Bienvenido ${demo.rol}!`);
+        
+        setTimeout(() => {
+          onLogin(true, { 
+            email: user.email, 
+            rol: demo.rol,
+            uid: user.uid
+          });
+          setCargando(false);
+        }, 1000);
+        
+      } catch (loginError) {
+        if (loginError.code === 'auth/user-not-found') {
+          setMensaje(`Creando cuenta ${demo.rol}...`);
+          
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            demo.email,
+            demo.password
+          );
+          
+          const user = userCredential.user;
+          setMensaje(`Cuenta ${demo.rol} creada. Iniciando sesión...`);
+          
+          setTimeout(() => {
+            onLogin(true, { 
+              email: user.email, 
+              rol: demo.rol,
+              uid: user.uid
+            });
+            setCargando(false);
+          }, 1000);
+          
+        } else {
+          throw loginError;
+        }
+      }
+      
+    } catch (error) {
+      setCargando(false);
+      console.error('Error con cuenta demo:', error);
+      
+      if (error.code === 'auth/email-already-in-use') {
+        setMensaje('Esta cuenta demo ya existe. Intente iniciar sesión manualmente.');
+      } else if (error.code === 'auth/network-request-failed') {
+        setMensaje('Error de conexión. Verifique su internet.');
+      } else {
+        setMensaje('Error con la cuenta demo. Intente con otro usuario.');
+      }
+    }
   };
 
   const cambiarModo = () => {
@@ -152,7 +194,7 @@ const Login = ({ onLogin }) => {
   };
 
   const obtenerTipoMensaje = () => {
-    if (mensaje.includes('Iniciando sesión') || mensaje.includes('Creando su cuenta') || mensaje.includes('¡Cuenta creada') || mensaje.includes('correctamente')) {
+    if (mensaje.includes('Iniciando sesión') || mensaje.includes('Creando su cuenta') || mensaje.includes('¡Cuenta creada') || mensaje.includes('correctamente') || mensaje.includes('Bienvenido')) {
       return 'exito';
     } else if (mensaje.includes('incorrecta') || mensaje.includes('ya está registrado') || mensaje.includes('al menos 6 caracteres') || mensaje.includes('Error')) {
       return 'error';

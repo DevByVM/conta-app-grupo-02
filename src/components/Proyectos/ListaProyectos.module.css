@@ -1,0 +1,450 @@
+.contenedorListaProyectos {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+}
+
+.cabeceraProyectos {
+  text-align: center;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.cabeceraProyectos h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.subtituloProyectos {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.gridProyectos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+}
+
+.tarjetaProyecto {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.tarjetaProyecto:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.tarjetaProyecto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.iconoProyecto {
+  color: #667eea;
+  margin-bottom: 16px;
+}
+
+.nombreProyecto {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2d3748;
+}
+
+.descripcionProyecto {
+  color: #718096;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.infoProyecto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.fechaProyecto {
+  font-size: 0.9rem;
+  color: #a0aec0;
+}
+
+.badgesProyecto {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeTipo {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.badgeEstado {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.tarjetaNuevoProyecto {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 40px 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.tarjetaNuevoProyecto:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-4px);
+}
+
+.iconoNuevo {
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+
+.tarjetaNuevoProyecto h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.tarjetaNuevoProyecto p {
+  opacity: 0.8;
+}
+
+.badgeNuevo {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.pieProyectos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.btnVolver {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btnVolver:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.accionesPie {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btnRecargar {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+}
+
+.btnRecargar:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btnRecargar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.contadorProyectos {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.cargandoProyectos {
+  text-align: center;
+  color: white;
+  padding: 60px 20px;
+}
+
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 3px solid white;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.estadoError {
+  text-align: center;
+  color: white;
+  padding: 60px 20px;
+}
+
+.iconoError {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.estadoError h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.estadoError p {
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.contenedorBotonesError {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btnReintentar {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btnReintentar:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btnCrearError {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  font-weight: 600;
+}
+
+.btnCrearError:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.estadoVacio {
+  text-align: center;
+  color: white;
+  padding: 60px 20px;
+}
+
+.iconoVacio {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.estadoVacio h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.estadoVacio p {
+  opacity: 0.8;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.btnCrearVacio {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 14px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.btnCrearVacio:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.estadisticas {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 40px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.estadistica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.numeroEstadistica {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.textoEstadistica {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoUsuario {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.emailUsuario {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.rolUsuario {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+  .contenedorListaProyectos {
+    padding: 20px 16px;
+  }
+  
+  .cabeceraProyectos h1 {
+    font-size: 2rem;
+  }
+  
+  .gridProyectos {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .estadisticas {
+    gap: 20px;
+    padding: 15px;
+  }
+  
+  .numeroEstadistica {
+    font-size: 1.5rem;
+  }
+  
+  .textoEstadistica {
+    font-size: 0.75rem;
+  }
+  
+  .contenedorBotonesError {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .infoUsuario {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .pieProyectos {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .gridProyectos {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .tarjetaProyecto, .tarjetaNuevoProyecto {
+    padding: 20px;
+  }
+  
+  .estadisticas {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

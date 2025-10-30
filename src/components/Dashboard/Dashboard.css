@@ -81,6 +81,21 @@
   font-weight: 400;
 }
 
+.dashboard .proyecto-info {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.dashboard .proyecto-badge,
+.dashboard .usuario-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  backdrop-filter: blur(10px);
+}
+
 .dashboard .estado-actualizacion {
   position: relative;
   z-index: 1;
