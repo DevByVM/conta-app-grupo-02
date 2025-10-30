@@ -58,8 +58,36 @@ const LibroCompras = () => {
     });
   };
 
+  const validarFormulario = () => {
+    const errores = [];
+    
+    if (!/^\d{3}-\d{3}-\d{7}$/.test(nuevaCompra.nFactura)) {
+      errores.push('Número de factura con formato inválido');
+    }
+    
+    if (parseFloat(nuevaCompra.monto) <= 0) {
+      errores.push('El monto debe ser mayor a 0');
+    }
+    
+    if (nuevaCompra.proveedor.length < 3) {
+      errores.push('El nombre del proveedor debe tener al menos 3 caracteres');
+    }
+    
+    if (nuevaCompra.fecha > new Date().toISOString().split('T')[0]) {
+      errores.push('No se permiten fechas futuras');
+    }
+    
+    return errores;
+  };
+
   const registrarCompra = async (e) => {
     e.preventDefault();
+    
+    const errores = validarFormulario();
+    if (errores.length > 0) {
+      mostrarNotificacion(errores.join(', '), 'error');
+      return;
+    }
     
     if (nuevaCompra.proveedor && nuevaCompra.nFactura && nuevaCompra.monto) {
       try {
@@ -171,9 +199,15 @@ const LibroCompras = () => {
                     type="date"
                     className="input-formulario"
                     value={nuevaCompra.fecha}
+                    max={new Date().toISOString().split('T')[0]} // No permite fechas futuras
                     onChange={(e) => setNuevaCompra({...nuevaCompra, fecha: e.target.value})}
                     required
                   />
+                  {nuevaCompra.fecha > new Date().toISOString().split('T')[0] && (
+                    <span className="mensaje-error" style={{color: 'red', fontSize: '12px'}}>
+                      No se permiten fechas futuras
+                    </span>
+                  )}
                 </div>
 
                 <div className="campo-formulario">
@@ -183,9 +217,22 @@ const LibroCompras = () => {
                     className="input-formulario"
                     placeholder="001-001-0000001"
                     value={nuevaCompra.nFactura}
-                    onChange={(e) => setNuevaCompra({...nuevaCompra, nFactura: e.target.value})}
+                    onChange={(e) => {
+                      const valor = e.target.value;
+                      // Validar formato: XXX-XXX-XXXXXXX
+                      if (/^[\d-]*$/.test(valor) && valor.length <= 15) {
+                        setNuevaCompra({...nuevaCompra, nFactura: valor});
+                      }
+                    }}
+                    pattern="^\d{3}-\d{3}-\d{7}$"
+                    title="Formato: 001-001-0000001 (3 dígitos-3 dígitos-7 dígitos)"
                     required
                   />
+                  {nuevaCompra.nFactura && !/^\d{3}-\d{3}-\d{7}$/.test(nuevaCompra.nFactura) && (
+                    <span className="mensaje-error" style={{color: 'red', fontSize: '12px'}}>
+                      Formato inválido. Use: 001-001-0000001
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -197,8 +244,14 @@ const LibroCompras = () => {
                   placeholder="Nombre del proveedor o establecimiento"
                   value={nuevaCompra.proveedor}
                   onChange={(e) => setNuevaCompra({...nuevaCompra, proveedor: e.target.value})}
+                  minLength="3"
                   required
                 />
+                {nuevaCompra.proveedor && nuevaCompra.proveedor.length < 3 && (
+                  <span className="mensaje-error" style={{color: 'red', fontSize: '12px'}}>
+                    Mínimo 3 caracteres requeridos
+                  </span>
+                )}
               </div>
 
               <div className="campo-formulario">
@@ -233,12 +286,24 @@ const LibroCompras = () => {
                   <input
                     type="number"
                     step="0.01"
+                    min="0.01"
                     className="input-formulario input-monto"
                     placeholder="0.00"
                     value={nuevaCompra.monto}
-                    onChange={(e) => calcularTotales(e.target.value)}
+                    onChange={(e) => {
+                      const valor = e.target.value;
+                      // Validar que sea positivo
+                      if (parseFloat(valor) >= 0 || valor === '') {
+                        calcularTotales(valor);
+                      }
+                    }}
                     required
                   />
+                  {nuevaCompra.monto && parseFloat(nuevaCompra.monto) <= 0 && (
+                    <span className="mensaje-error" style={{color: 'red', fontSize: '12px'}}>
+                      El monto debe ser mayor a 0
+                    </span>
+                  )}
                 </div>
 
                 <div className="desglose-impuestos">
@@ -259,7 +324,15 @@ const LibroCompras = () => {
               <button 
                 type="submit" 
                 className="btn-primario btn-registrar"
-                disabled={!nuevaCompra.proveedor || !nuevaCompra.nFactura || !nuevaCompra.monto}
+                disabled={
+                  !nuevaCompra.proveedor || 
+                  !nuevaCompra.nFactura || 
+                  !nuevaCompra.monto ||
+                  !/^\d{3}-\d{3}-\d{7}$/.test(nuevaCompra.nFactura) ||
+                  parseFloat(nuevaCompra.monto) <= 0 ||
+                  nuevaCompra.proveedor.length < 3 ||
+                  nuevaCompra.fecha > new Date().toISOString().split('T')[0]
+                }
               >
                 <svg className="btn-icono" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
