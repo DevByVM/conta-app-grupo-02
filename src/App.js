@@ -7,16 +7,27 @@ import LibroVentas from './components/LibroVentas/LibroVentas';
 import LibroCompras from './components/LibroCompras/LibroCompras';
 import LibroDiario from './components/LibroDiario/LibroDiario';
 import LibroMayor from './components/LibroMayor/LibroMayor';
+import ListaProyectos from './components/Proyectos/ListaProyectos';
+import CrearProyecto from './components/Proyectos/CrearProyecto';
 
 function App() {
   const [usuario, setUsuario] = useState(null);
   const [paginaActual, setPaginaActual] = useState('dashboard');
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [proyectoActual, setProyectoActual] = useState(null);
+  const [mostrarProyectos, setMostrarProyectos] = useState(false);
+  const [mostrarCrearProyecto, setMostrarCrearProyecto] = useState(false);
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem('contaapp_usuario');
     if (usuarioGuardado) {
-      setUsuario(JSON.parse(usuarioGuardado));
+      const usuarioData = JSON.parse(usuarioGuardado);
+      setUsuario(usuarioData);
+      
+      // Si hay usuario pero no proyecto, mostrar selección de proyectos
+      if (!proyectoActual) {
+        setMostrarProyectos(true);
+      }
     }
   }, []);
 
@@ -24,33 +35,65 @@ function App() {
     if (success && usuarioInfo) {
       setUsuario(usuarioInfo);
       localStorage.setItem('contaapp_usuario', JSON.stringify(usuarioInfo));
+      setMostrarProyectos(true);
       setPaginaActual('dashboard');
     }
   };
 
   const handleLogout = () => {
     setUsuario(null);
+    setProyectoActual(null);
+    setMostrarProyectos(false);
+    setMostrarCrearProyecto(false);
     localStorage.removeItem('contaapp_usuario');
     setPaginaActual('dashboard');
     setMenuAbierto(false);
   };
 
+  const handleSeleccionarProyecto = (proyecto) => {
+    if (proyecto === 'nuevo') {
+      setMostrarCrearProyecto(true);
+      setMostrarProyectos(false);
+    } else {
+      setProyectoActual(proyecto);
+      setMostrarProyectos(false);
+      setMostrarCrearProyecto(false);
+    }
+  };
+
+  const handleProyectoCreado = (proyecto) => {
+    setProyectoActual(proyecto);
+    setMostrarCrearProyecto(false);
+    setMostrarProyectos(false);
+  };
+
+  const handleCancelarCreacion = () => {
+    setMostrarCrearProyecto(false);
+    setMostrarProyectos(true);
+  };
+
   const renderizarContenido = () => {
+    // Pasar el proyecto actual a cada componente
+    const propsComunes = { 
+      proyecto: proyectoActual,
+      usuario: usuario
+    };
+
     switch(paginaActual) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard {...propsComunes} />;
       case 'catalogo':
-        return <CatalogoCuentas />;
+        return <CatalogoCuentas {...propsComunes} />;
       case 'ventas':
-        return <LibroVentas />;
+        return <LibroVentas {...propsComunes} />;
       case 'compras':
-        return <LibroCompras />;
+        return <LibroCompras {...propsComunes} />;
       case 'diario':
-        return <LibroDiario />;
+        return <LibroDiario {...propsComunes} />;
       case 'mayor':
-        return <LibroMayor />;
+        return <LibroMayor {...propsComunes} />;
       default:
-        return <Dashboard />;
+        return <Dashboard {...propsComunes} />;
     }
   };
 
@@ -90,8 +133,44 @@ function App() {
     return iconos[pagina] || iconos.dashboard;
   };
 
+  // Mostrar Login si no hay usuario
   if (!usuario) {
     return <Login onLogin={handleLogin} />;
+  }
+
+  // Mostrar pantalla de crear proyecto
+  if (mostrarCrearProyecto) {
+    return (
+      <CrearProyecto 
+        usuario={usuario}
+        onProyectoCreado={handleProyectoCreado}
+        onCancelar={handleCancelarCreacion}
+      />
+    );
+  }
+
+  // Mostrar selección de proyectos
+  if (mostrarProyectos) {
+    return (
+      <ListaProyectos 
+        usuario={usuario}
+        onSeleccionarProyecto={handleSeleccionarProyecto}
+        onCerrar={() => {
+          // Si no hay proyecto, crear uno por defecto
+          if (!proyectoActual) {
+            const proyectoDefault = {
+              id: 'default',
+              nombre: 'Proyecto Principal',
+              fechaCreacion: new Date(),
+              descripcion: 'Proyecto por defecto',
+              tipo: 'empresa'
+            };
+            setProyectoActual(proyectoDefault);
+          }
+          setMostrarProyectos(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -147,6 +226,11 @@ function App() {
                   </svg>
                 </div>
                 <span className="email-usuario">{usuario.email}</span>
+                {proyectoActual && (
+                  <div className="proyecto-indicador-mini">
+                    <div className="proyecto-punto-activo"></div>
+                  </div>
+                )}
                 <svg className="icono-dropdown" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                 </svg>
@@ -158,9 +242,31 @@ function App() {
                   <div className="rol-usuario">
                     {usuario.rol || 'Usuario Contable'}
                   </div>
+                  {proyectoActual && (
+                    <div className="proyecto-info-dropdown">
+                      <div className="proyecto-titulo">Proyecto Actual</div>
+                      <div className="proyecto-nombre-dropdown">{proyectoActual.nombre}</div>
+                      <div className="proyecto-estado">
+                        <div className="proyecto-activo-punto"></div>
+                        <span>Activo</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="estado-sesion">Sesión activa</div>
                 </div>
                 <div className="separador-menu"></div>
+                <button 
+                  className="btn-cambiar-proyecto-dropdown"
+                  onClick={() => {
+                    setMostrarProyectos(true);
+                    setMenuAbierto(false);
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                  </svg>
+                  Cambiar Proyecto
+                </button>
                 <button 
                   className="btn-cerrar-sesion"
                   onClick={handleLogout}
@@ -192,6 +298,18 @@ function App() {
         {/* Menú móvil */}
         {menuAbierto && (
           <div className="menu-mobile">
+            {/* Información del proyecto en móvil */}
+            {proyectoActual && (
+              <div className="proyecto-info-mobile">
+                <div className="proyecto-titulo-mobile">Proyecto Actual</div>
+                <div className="proyecto-nombre-mobile">{proyectoActual.nombre}</div>
+                <div className="proyecto-estado-mobile">
+                  <div className="proyecto-activo-punto"></div>
+                  <span>Activo</span>
+                </div>
+              </div>
+            )}
+
             {[
               { key: 'dashboard', label: 'Dashboard' },
               { key: 'catalogo', label: 'Catálogo' },
@@ -214,6 +332,19 @@ function App() {
             ))}
             
             <div className="separador-mobile"></div>
+
+            <button 
+              className="btn-cambiar-proyecto-mobile"
+              onClick={() => {
+                setMostrarProyectos(true);
+                setMenuAbierto(false);
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+              </svg>
+              Cambiar Proyecto
+            </button>
             
             <button 
               className="btn-cerrar-sesion-mobile"

@@ -223,6 +223,125 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* ========== VALIDACIONES Y ERRORES ========== */
+.libro-compras .texto-ayuda {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--compras-color-texto-secundario);
+  margin-top: 0.25rem;
+}
+
+.libro-compras .texto-error {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--compras-color-error);
+  margin-top: 0.25rem;
+  font-weight: 500;
+  animation: comprasShakeError 0.3s ease-in-out;
+}
+
+.libro-compras .input-error,
+.libro-compras .textarea-formulario.input-error {
+  border-color: var(--compras-color-error) !important;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.libro-compras .input-error:focus,
+.libro-compras .textarea-formulario.input-error:focus {
+  border-color: var(--compras-color-error) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+@keyframes comprasShakeError {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ========== ALERTA DE EDICIÓN ========== */
+.libro-compras .alerta-edicion {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  animation: comprasSlideDown 0.3s ease-out;
+}
+
+.libro-compras .alerta-edicion strong {
+  color: #78350f;
+  font-weight: 600;
+}
+
+.libro-compras .btn-cancelar-edicion {
+  background: rgba(255, 255, 255, 0.9);
+  color: #78350f;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.libro-compras .btn-cancelar-edicion:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+@keyframes comprasSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== BOTONES DE FORMULARIO ========== */
+.libro-compras .grupo-botones-formulario {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.libro-compras .btn-secundario {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--compras-color-fondo-gris);
+  color: var(--compras-color-texto);
+  border: 2px solid var(--compras-color-borde);
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.libro-compras .btn-secundario:hover {
+  background: var(--compras-color-hover);
+  border-color: var(--compras-color-texto-secundario);
+  transform: translateY(-2px);
+}
+
+.libro-compras .btn-actualizar {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.libro-compras .btn-actualizar:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(217, 119, 6, 0.3);
+}
+
 .libro-compras .panel-totales {
   background: var(--compras-color-secundario);
   border-radius: 12px;
@@ -439,6 +558,76 @@
 
 .libro-compras .texto-credito {
   color: var(--compras-color-credito) !important;
+}
+
+/* ========== BOTONES DE ACCIÓN EN TARJETAS ========== */
+.libro-compras .compra-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--compras-color-borde);
+}
+
+.libro-compras .btn-accion {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--compras-color-borde);
+  border-radius: 6px;
+  background: white;
+  color: var(--compras-color-texto);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.libro-compras .btn-accion svg {
+  stroke-width: 2;
+}
+
+.libro-compras .btn-editar {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.libro-compras .btn-editar:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.libro-compras .btn-eliminar {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.libro-compras .btn-eliminar:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.libro-compras .compra-editando {
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  background: linear-gradient(to bottom, rgba(251, 191, 36, 0.05), white);
+  animation: comprasPulse 2s infinite;
+}
+
+@keyframes comprasPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.15);
+  }
 }
 
 .libro-compras .resumen-general {

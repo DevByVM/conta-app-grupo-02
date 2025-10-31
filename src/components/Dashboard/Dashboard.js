@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../services/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { 
+  obtenerTransaccionesDelProyecto,
+  obtenerCuentasDelProyecto 
+} from '../../services/firebase';
 import './Dashboard.css';
 
-const Dashboard = () => {
+const Dashboard = ({ proyecto, usuario }) => {
   const [estadisticas, setEstadisticas] = useState({
     totalCuentas: 0,
     totalVentas: 0,
@@ -19,21 +21,22 @@ const Dashboard = () => {
   const [ultimasTransacciones, setUltimasTransacciones] = useState([]);
 
   useEffect(() => {
-    cargarEstadisticas();
-  }, []);
+    if (proyecto && usuario) {
+      cargarEstadisticas();
+    } else {
+      setCargando(false);
+    }
+  }, [proyecto, usuario]);
 
   const cargarEstadisticas = async () => {
     try {
       setCargando(true);
 
-      const cuentasSnapshot = await getDocs(collection(db, 'cuentas'));
-      const cuentasData = cuentasSnapshot.docs.map(doc => doc.data());
+      // Obtener cuentas del proyecto
+      const cuentasData = await obtenerCuentasDelProyecto(usuario.uid, proyecto.id);
       
-      const transaccionesSnapshot = await getDocs(collection(db, 'transacciones'));
-      const transaccionesData = transaccionesSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // Obtener transacciones del proyecto
+      const transaccionesData = await obtenerTransaccionesDelProyecto(usuario.uid, proyecto.id);
 
       const ventas = transaccionesData.filter(t => t.tipo === 'venta');
       const compras = transaccionesData.filter(t => t.tipo === 'compra');
@@ -86,32 +89,27 @@ const Dashboard = () => {
     });
   };
 
-  const obtenerIconoTipo = (tipo) => {
-    if (tipo === 'venta') {
-      return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-      );
-    } else {
-      return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-        </svg>
-      );
-    }
-  };
-
-  const obtenerColorTipo = (tipo) => {
-    return tipo === 'venta' ? 'var(--dashboard-color-venta)' : 'var(--dashboard-color-compra)';
-  };
+  // Mostrar mensaje si no hay proyecto seleccionado
+  if (!proyecto || !usuario) {
+    return (
+      <div className="dashboard">
+        <div className="estado-vacio">
+          <div className="icono-vacio">📊</div>
+          <h3 className="titulo-vacio">Selecciona un proyecto</h3>
+          <p className="descripcion-vacio">
+            Para ver el panel de control, primero selecciona un proyecto
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (cargando) {
     return (
       <div className="dashboard">
         <div className="estado-cargando">
           <div className="spinner-elegante"></div>
-          <p className="texto-cargando">Cargando panel de control</p>
+          <p className="texto-cargando">Cargando panel de control del proyecto...</p>
         </div>
       </div>
     );
@@ -123,7 +121,13 @@ const Dashboard = () => {
         <div className="cabecera-seccion">
           <div className="titulo-grupo">
             <h1 className="titulo-principal">Panel de Control</h1>
-            <p className="subtitulo">Vista general integral del estado financiero empresarial</p>
+            <p className="subtitulo">
+              Proyecto: <strong>{proyecto.nombre}</strong> - Vista general integral del estado financiero
+            </p>
+            <div className="proyecto-info">
+              <span className="proyecto-badge">Proyecto: {proyecto.nombre}</span>
+              <span className="usuario-badge">Usuario: {usuario.email}</span>
+            </div>
           </div>
           <div className="estado-actualizacion">
             <span className="badge-actualizado">Actualizado en tiempo real</span>
@@ -211,7 +215,7 @@ const Dashboard = () => {
                 <svg className="icono-panel" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                 </svg>
-                Análisis Financiero Detallado
+                Análisis Financiero - {proyecto.nombre}
               </h2>
             </div>
             
@@ -285,7 +289,7 @@ const Dashboard = () => {
 
               {/* Estado de Resultados */}
               <div className="seccion-estado-resultados">
-                <h3 className="titulo-seccion">Estado de Resultados Consolidado</h3>
+                <h3 className="titulo-seccion">Estado de Resultados - {proyecto.nombre}</h3>
                 <div className="tabla-resultados">
                   <div className="fila-resultado">
                     <span className="concepto-resultado">Ingresos por Ventas</span>
@@ -315,7 +319,7 @@ const Dashboard = () => {
                 <svg className="icono-panel" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                Actividad Reciente
+                Actividad Reciente - {proyecto.nombre}
               </h2>
               <div className="contador-actividad">
                 <span className="badge-contador">{ultimasTransacciones.length}</span>
@@ -331,7 +335,9 @@ const Dashboard = () => {
                     </svg>
                   </div>
                   <h3 className="titulo-vacio">No hay actividad reciente</h3>
-                  <p className="descripcion-vacio">Las transacciones aparecerán aquí</p>
+                  <p className="descripcion-vacio">
+                    Registre transacciones en los módulos de Ventas o Compras para ver la actividad
+                  </p>
                 </div>
               ) : (
                 <div className="lista-actividad">
@@ -339,9 +345,19 @@ const Dashboard = () => {
                     <div key={transaccion.id} className="tarjeta-actividad">
                       <div 
                         className="icono-actividad"
-                        style={{ backgroundColor: obtenerColorTipo(transaccion.tipo) }}
+                        style={{ 
+                          backgroundColor: transaccion.tipo === 'venta' ? '#10b981' : '#0ea5e9'
+                        }}
                       >
-                        {obtenerIconoTipo(transaccion.tipo)}
+                        {transaccion.tipo === 'venta' ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                          </svg>
+                        )}
                       </div>
                       <div className="contenido-actividad">
                         <div className="titulo-actividad">
@@ -359,8 +375,8 @@ const Dashboard = () => {
               
               <div className="pie-actividad">
                 <div className="info-sistema">
-                  <span className="etiqueta-sistema">Sistema actualizado al</span>
-                  <span className="fecha-sistema">{new Date().toLocaleDateString('es-SV')}</span>
+                  <span className="etiqueta-sistema">Proyecto: {proyecto.nombre}</span>
+                  <span className="fecha-sistema">Actualizado: {new Date().toLocaleDateString('es-SV')}</span>
                 </div>
                 <button 
                   className="btn-actualizar"
@@ -379,22 +395,22 @@ const Dashboard = () => {
         {/* Panel de Información del Proyecto */}
         <div className="panel-proyecto">
           <div className="contenido-proyecto">
-            <h3 className="titulo-proyecto">Proyecto de Sistema Contable - Grupo 02</h3>
+            <h3 className="titulo-proyecto">Proyecto: {proyecto.nombre}</h3>
             <div className="grid-proyecto">
               <div className="item-proyecto">
-                <div className="valor-proyecto">6</div>
-                <span className="etiqueta-proyecto">Módulos Implementados</span>
+                <div className="valor-proyecto">{estadisticas.totalCuentas}</div>
+                <span className="etiqueta-proyecto">Cuentas Configuradas</span>
               </div>
               <div className="item-proyecto">
-                <div className="valor-proyecto">100%</div>
-                <span className="etiqueta-proyecto">Funcionalidades Completas</span>
+                <div className="valor-proyecto">{estadisticas.totalTransacciones}</div>
+                <span className="etiqueta-proyecto">Transacciones Registradas</span>
               </div>
               <div className="item-proyecto">
-                <div className="valor-proyecto">☁️</div>
+                <div className="valor-proyecto">Cloud</div>
                 <span className="etiqueta-proyecto">Cloud Firebase</span>
               </div>
               <div className="item-proyecto">
-                <div className="valor-proyecto">🇸🇻</div>
+                <div className="valor-proyecto">SV</div>
                 <span className="etiqueta-proyecto">Normativa Local SV</span>
               </div>
             </div>
