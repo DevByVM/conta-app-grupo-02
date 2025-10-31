@@ -344,6 +344,31 @@ export const agregarCompraAProyecto = async (userId, proyectoId, compraData) => 
   }
 };
 
+// Actualizar compra específica
+export const actualizarCompraDelProyecto = async (userId, proyectoId, compraId, compraData) => {
+  try {
+    const compraRef = doc(db, 'usuarios', userId, 'proyectos', proyectoId, 'compras', compraId);
+    await updateDoc(compraRef, {
+      ...compraData,
+      ultimaModificacion: new Date()
+    });
+  } catch (error) {
+    console.error("Error actualizando compra:", error);
+    throw error;
+  }
+};
+
+// Eliminar compra específica
+export const eliminarCompraDelProyecto = async (userId, proyectoId, compraId) => {
+  try {
+    const compraRef = doc(db, 'usuarios', userId, 'proyectos', proyectoId, 'compras', compraId);
+    await deleteDoc(compraRef);
+  } catch (error) {
+    console.error("Error eliminando compra:", error);
+    throw error;
+  }
+};
+
 // Funciones Utilitarias
 
 // Verificar si usuario tiene proyectos
