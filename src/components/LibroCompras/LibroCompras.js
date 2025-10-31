@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../services/firebase';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { 
+  obtenerComprasDelProyecto, 
+  agregarCompraAProyecto 
+} from '../../services/firebase';
 import './LibroCompras.css';
 
-const LibroCompras = () => {
+const LibroCompras = ({ proyecto, usuario }) => {
   const [compras, setCompras] = useState([]);
   const [nuevaCompra, setNuevaCompra] = useState({
     fecha: new Date().toISOString().split('T')[0],
@@ -24,18 +26,22 @@ const LibroCompras = () => {
   };
 
   useEffect(() => {
-    cargarCompras();
-  }, []);
+    if (proyecto && usuario) {
+      cargarCompras();
+    }
+  }, [proyecto, usuario]);
 
   const cargarCompras = async () => {
     try {
       setCargando(true);
-      const q = query(collection(db, 'transacciones'), where('tipo', '==', 'compra'));
-      const querySnapshot = await getDocs(q);
-      const comprasData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      console.log('Cargando compras para proyecto:', {
+        usuario: usuario?.uid,
+        proyecto: proyecto?.id,
+        proyectoNombre: proyecto?.nombre
+      });
+      
+      const comprasData = await obtenerComprasDelProyecto(usuario.uid, proyecto.id);
+      console.log('Compras cargadas:', comprasData);
       setCompras(comprasData);
     } catch (error) {
       console.error('Error cargando compras:', error);
@@ -63,7 +69,13 @@ const LibroCompras = () => {
     
     if (nuevaCompra.proveedor && nuevaCompra.nFactura && nuevaCompra.monto) {
       try {
-        await addDoc(collection(db, 'transacciones'), {
+        console.log('Registrando compra en proyecto:', {
+          usuario: usuario.uid,
+          proyecto: proyecto.id,
+          compra: nuevaCompra
+        });
+
+        await agregarCompraAProyecto(usuario.uid, proyecto.id, {
           ...nuevaCompra,
           tipo: 'compra',
           monto: parseFloat(nuevaCompra.monto),
@@ -84,7 +96,7 @@ const LibroCompras = () => {
         });
 
         await cargarCompras();
-        mostrarNotificacion('Compra registrada exitosamente en el libro contable');
+        mostrarNotificacion('Compra registrada exitosamente en el proyecto actual');
       } catch (error) {
         console.error('Error registrando compra:', error);
         mostrarNotificacion('Error al registrar la compra', 'error');
@@ -118,6 +130,21 @@ const LibroCompras = () => {
     return colores[tipo] || 'var(--compras-color-texto)';
   };
 
+  // Mostrar mensaje si no hay proyecto seleccionado
+  if (!proyecto || !usuario) {
+    return (
+      <div className="libro-compras">
+        <div className="estado-vacio">
+          <div className="icono-vacio">🛒</div>
+          <h3 className="titulo-vacio">Selecciona un proyecto</h3>
+          <p className="descripcion-vacio">
+            Para gestionar el libro de compras, primero selecciona un proyecto
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="libro-compras">
       {/* Notificación */}
@@ -141,7 +168,13 @@ const LibroCompras = () => {
         <div className="cabecera-seccion">
           <div className="titulo-grupo">
             <h1 className="titulo-principal">Libro de Compras</h1>
-            <p className="subtitulo">Registro contable de compras y gastos con IVA 13% - El Salvador</p>
+            <p className="subtitulo">
+              Proyecto: <strong>{proyecto.nombre}</strong> - Registro contable de compras y gastos con IVA 13%
+            </p>
+            <div className="proyecto-info">
+              <span className="proyecto-badge">Proyecto: {proyecto.nombre}</span>
+              <span className="usuario-badge">Usuario: {usuario.email}</span>
+            </div>
           </div>
           <div className="resumen-cabecera">
             <div className="indicador-total">
@@ -161,6 +194,7 @@ const LibroCompras = () => {
                 </svg>
                 Registrar Nueva Compra
               </h2>
+              <span className="proyecto-indicador">en {proyecto.nombre}</span>
             </div>
             
             <form onSubmit={registrarCompra} className="formulario-compra">
@@ -276,7 +310,7 @@ const LibroCompras = () => {
                 <svg className="icono-panel" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                Compras Registradas
+                Compras del Proyecto
               </h2>
               <div className="contador-compras">
                 <span className="badge-contador">{compras.length}</span>
@@ -287,7 +321,7 @@ const LibroCompras = () => {
               {cargando ? (
                 <div className="estado-cargando">
                   <div className="spinner-elegante"></div>
-                  <p className="texto-cargando">Cargando registro de compras</p>
+                  <p className="texto-cargando">Cargando registro de compras del proyecto...</p>
                 </div>
               ) : (
                 <>
@@ -298,8 +332,8 @@ const LibroCompras = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                       </div>
-                      <h3 className="titulo-vacio">No hay compras registradas</h3>
-                      <p className="descripcion-vacio">Comience registrando su primera transacción de compra</p>
+                      <h3 className="titulo-vacio">No hay compras en este proyecto</h3>
+                      <p className="descripcion-vacio">Comience registrando la primera compra en este proyecto</p>
                     </div>
                   ) : (
                     <>
