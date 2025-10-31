@@ -34,17 +34,18 @@
 .tarjetaProyecto {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  cursor: pointer;
+  padding: 24px;
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .tarjetaProyecto:hover {
-  transform: translateY(-8px);
+  transform: translateY(-4px);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
 }
 
@@ -56,6 +57,11 @@
   right: 0;
   height: 4px;
   background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.contenidoPrincipal {
+  cursor: pointer;
+  flex: 1;
 }
 
 .iconoProyecto {
@@ -109,6 +115,73 @@
 .badgeEstado {
   background: #e8f5e8;
   color: #2e7d32;
+}
+
+.accionesProyecto {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btnAbrir {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btnAbrir:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.btnEliminar {
+  background: #f56565;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btnEliminar:hover:not(:disabled) {
+  background: #e53e3e;
+  transform: translateY(-1px);
+}
+
+.btnEliminar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinnerEliminar {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 .tarjetaNuevoProyecto {
@@ -431,6 +504,16 @@
     gap: 16px;
     text-align: center;
   }
+  
+  .accionesProyecto {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .btnAbrir,
+  .btnEliminar {
+    padding: 12px 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -446,5 +529,9 @@
   .estadisticas {
     flex-direction: column;
     gap: 15px;
+  }
+  
+  .accionesProyecto {
+    gap: 6px;
   }
 }

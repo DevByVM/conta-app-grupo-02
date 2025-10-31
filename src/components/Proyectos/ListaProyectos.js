@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { obtenerProyectos } from '../../services/firebase';
+import { obtenerProyectos, eliminarProyecto } from '../../services/firebase';
 import styles from './ListaProyectos.module.css';
 
 const ListaProyectos = ({ usuario, onSeleccionarProyecto, onCerrar }) => {
@@ -7,6 +7,7 @@ const ListaProyectos = ({ usuario, onSeleccionarProyecto, onCerrar }) => {
   const [cargando, setCargando] = useState(true);
   const [recargando, setRecargando] = useState(false);
   const [error, setError] = useState(null);
+  const [eliminando, setEliminando] = useState(null);
 
   useEffect(() => {
     if (usuario && usuario.uid) {
@@ -41,6 +42,34 @@ const ListaProyectos = ({ usuario, onSeleccionarProyecto, onCerrar }) => {
 
   const handleCrearNuevo = () => {
     onSeleccionarProyecto('nuevo');
+  };
+
+  const handleEliminarProyecto = async (proyecto, e) => {
+    e.stopPropagation();
+    
+    const confirmar = window.confirm(
+      `¿Está seguro de que desea eliminar el proyecto "${proyecto.nombre}"?\n\nEsta acción eliminará todos los datos del proyecto y no se puede deshacer.`
+    );
+    
+    if (!confirmar) return;
+    
+    try {
+      setEliminando(proyecto.id);
+      
+      await eliminarProyecto(usuario.uid, proyecto.id);
+      
+      // Actualizar la lista localmente
+      setProyectos(proyectos.filter(p => p.id !== proyecto.id));
+      
+      // Mostrar mensaje de éxito
+      alert(`Proyecto "${proyecto.nombre}" eliminado correctamente`);
+      
+    } catch (error) {
+      console.error('Error eliminando proyecto:', error);
+      alert('Error al eliminar el proyecto. Intente nuevamente.');
+    } finally {
+      setEliminando(null);
+    }
   };
 
   const formatearFecha = (fecha) => {
@@ -132,29 +161,56 @@ const ListaProyectos = ({ usuario, onSeleccionarProyecto, onCerrar }) => {
           <div 
             key={proyecto.id} 
             className={styles.tarjetaProyecto}
-            onClick={() => handleSeleccionarProyecto(proyecto)}
           >
-            <div className={styles.iconoProyecto}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <h3 className={styles.nombreProyecto}>{proyecto.nombre}</h3>
-            <p className={styles.descripcionProyecto}>
-              {proyecto.descripcion || 'Proyecto contable sin descripción'}
-            </p>
-            <div className={styles.infoProyecto}>
-              <span className={styles.fechaProyecto}>
-                Creado: {formatearFecha(proyecto.fechaCreacion)}
-              </span>
-            </div>
-            <div className={styles.badgesProyecto}>
-              <div className={`${styles.badge} ${styles.badgeTipo}`}>
-                {proyecto.tipo || 'Empresa'}
+            <div 
+              className={styles.contenidoPrincipal}
+              onClick={() => handleSeleccionarProyecto(proyecto)}
+            >
+              <div className={styles.iconoProyecto}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
               </div>
-              <div className={`${styles.badge} ${styles.badgeEstado}`}>
-                {proyecto.estado || 'Activo'}
+              <h3 className={styles.nombreProyecto}>{proyecto.nombre}</h3>
+              <p className={styles.descripcionProyecto}>
+                {proyecto.descripcion || 'Proyecto contable sin descripción'}
+              </p>
+              <div className={styles.infoProyecto}>
+                <span className={styles.fechaProyecto}>
+                  Creado: {formatearFecha(proyecto.fechaCreacion)}
+                </span>
               </div>
+              <div className={styles.badgesProyecto}>
+                <div className={`${styles.badge} ${styles.badgeTipo}`}>
+                  {proyecto.tipo || 'Empresa'}
+                </div>
+                <div className={`${styles.badge} ${styles.badgeEstado}`}>
+                  {proyecto.estado || 'Activo'}
+                </div>
+              </div>
+            </div>
+            
+            <div className={styles.accionesProyecto}>
+              <button 
+                className={styles.btnAbrir}
+                onClick={() => handleSeleccionarProyecto(proyecto)}
+              >
+                Abrir
+              </button>
+              <button 
+                className={styles.btnEliminar}
+                onClick={(e) => handleEliminarProyecto(proyecto, e)}
+                disabled={eliminando === proyecto.id}
+              >
+                {eliminando === proyecto.id ? (
+                  <>
+                    <div className={styles.spinnerEliminar}></div>
+                    Eliminando...
+                  </>
+                ) : (
+                  'Eliminar'
+                )}
+              </button>
             </div>
           </div>
         ))}
